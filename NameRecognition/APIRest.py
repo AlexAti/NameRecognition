@@ -3,6 +3,7 @@ from flask_restful import Resource, Api, reqparse
 from dill import load, dump
 import pandas as pd
 import sys
+import os
 
 sys.path[0] = sys.path[0].replace('NameRecognition/NameRecognition','NameRecognition')
 from NameRecognition.MLScreener import MLScreener
