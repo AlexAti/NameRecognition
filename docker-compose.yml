@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  name_recognition:
+    build: 
+      context: .
+      target: name_recognition
+    networks:
+      nr_networks:
+  python:
+    build: 
+      context: .
+      target: test
+    networks: 
+      nr_networks:
+
+networks:
+  nr_networks:
+    driver: bridge

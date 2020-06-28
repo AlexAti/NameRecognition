@@ -50,11 +50,16 @@ class APIScreening(Resource):
 
 class APILoadDataset(Resource):
     def get(self):
-        pass
+        parser = reqparse.RequestParser()
+        parser.add_argument('path')
+        args = parser.parse_args()
 
 class APILoadModel(Resource):
     def get(self):
-        pass
+        parser = reqparse.RequestParser()
+        parser.add_argument('path')
+        args = parser.parse_args()
+        
 
 class APIThreshold(Resource):
     def get(self):

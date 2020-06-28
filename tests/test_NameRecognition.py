@@ -13,7 +13,7 @@ class NameRecognitionTest(unittest.TestCase):
         session = requests.Session()
 
         h = session.get(
-            url = 'http://127.0.0.1:5000/screening/',
+            url = 'http://localhost:8080/screening/',
             params = {
                 'key_party': "prueba1",
                 'value_party': "kashdon shirleeta tequana",
