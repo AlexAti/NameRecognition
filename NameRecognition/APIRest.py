@@ -67,4 +67,7 @@ api.add_resource(APILoadModel, '/loadmodel/')
 api.add_resource(APIThreshold, '/threshold/')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(
+        debug = True,
+        port = int(os.environ.get('NAME_RECOGNITION_PORT'))
+    )
