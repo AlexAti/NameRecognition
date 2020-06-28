@@ -6,6 +6,7 @@ import sys
 import os
 
 sys.path[0] = sys.path[0].replace('NameRecognition/NameRecognition','NameRecognition')
+sys.path[0] = sys.path[0].replace('NameRecognition\\NameRecognition','NameRecognition')
 from NameRecognition.MLScreener import MLScreener
 
 app = Flask('NameRecognitionAPIRest')
@@ -21,7 +22,7 @@ streener = MLScreener(
     value_screen = 'value_screen',
     key_party = 'key_party',
     value_party = 'value_party',
-    verbose = True
+    verbose = False
 )
 
 streener.fit(df_screen['value_screen'])
@@ -68,15 +69,9 @@ api.add_resource(APILoadModel, '/loadmodel/')
 api.add_resource(APIThreshold, '/threshold/')
 
 if __name__ == '__main__':
-    port = None
-    try:
-        port = int(os.environ.get('NAME_RECOGNITION_PORT'))
-        print(port)
-    except:
-        pass
-    else:
-        port = 5000
+    #os.environ['NAME_RECOGNITION_PORT'] = '8082'
+    print(os.environ)
     app.run(
         debug = True,
-        port = port
+        port = 5000 if os.environ.get('NAME_RECOGNITION_PORT') == None else int(os.environ.get('NAME_RECOGNITION_PORT'))
     )
