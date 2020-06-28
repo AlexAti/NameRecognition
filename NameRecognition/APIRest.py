@@ -26,7 +26,7 @@ streener = MLScreener(
 )
 
 streener.fit(df_screen['value_screen'])
-f = open('./NameRecognition/model/model.joblib', mode = 'wb+')
+f = open('./model/model.joblib', mode = 'wb+')
 dump(streener, f)
 f.close()
 
@@ -69,9 +69,7 @@ api.add_resource(APILoadModel, '/loadmodel/')
 api.add_resource(APIThreshold, '/threshold/')
 
 if __name__ == '__main__':
-    #os.environ['NAME_RECOGNITION_PORT'] = '8082'
-    print(os.environ)
     app.run(
-        debug = True,
+        debug = True if os.environ.get('NAME_RECOGNITION_DEBUG') == None else os.environ.get('NAME_RECOGNITION_DEBUG') == 'True',
         port = 5000 if os.environ.get('NAME_RECOGNITION_PORT') == None else int(os.environ.get('NAME_RECOGNITION_PORT'))
     )
