@@ -71,6 +71,7 @@ if __name__ == '__main__':
     port = None
     try:
         port = int(os.environ.get('NAME_RECOGNITION_PORT'))
+        print(port)
     except:
         pass
     else:
