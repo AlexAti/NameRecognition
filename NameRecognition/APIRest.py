@@ -4,6 +4,8 @@ from dill import load, dump
 import pandas as pd
 import sys
 import os
+import socket
+
 
 sys.path[0] = sys.path[0].replace('NameRecognition/NameRecognition','NameRecognition')
 sys.path[0] = sys.path[0].replace('NameRecognition\\NameRecognition','NameRecognition')
@@ -59,7 +61,7 @@ class APILoadModel(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('path')
         args = parser.parse_args()
-        
+
 
 class APIThreshold(Resource):
     def get(self):
@@ -75,6 +77,7 @@ api.add_resource(APIThreshold, '/threshold/')
 
 if __name__ == '__main__':
     app.run(
+        host = socket.gethostbyname(socket.gethostname()),
         debug = True if os.environ.get('NAME_RECOGNITION_DEBUG') == None else os.environ.get('NAME_RECOGNITION_DEBUG') == 'True',
         port = 5000 if os.environ.get('NAME_RECOGNITION_PORT') == None else int(os.environ.get('NAME_RECOGNITION_PORT'))
     )
