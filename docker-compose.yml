@@ -6,8 +6,6 @@ services:
       target: name_recognition
     networks:
       nr_networks:
-    ports:
-      - "5000:5000"
   python:
     build: 
       context: .
