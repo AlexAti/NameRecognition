@@ -40,9 +40,10 @@ class APIScreening(Resource):
 class APIInstance(Resource):
     def get(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('ninstances', type = int)
+        parser.add_argument('ninstances')
         args = parser.parse_args()
-        ninstances = args['ninstances']
+        ninstances = int(args['ninstances'])
+        return ({'ninstances': args['ninstances']})
 
 api.add_resource(APIOnDemand, '/ondemand/')
 api.add_resource(APIScreening, '/screening/')
