@@ -84,7 +84,6 @@ class APILoadModel(Resource):
         parser.add_argument('path')
         args = parser.parse_args()
 
-
 class APIThreshold(Resource):
     def get(self):
         parser = reqparse.RequestParser()

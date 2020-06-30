@@ -37,8 +37,17 @@ class APIScreening(Resource):
     def get(self):
         pass
 
+class APIInstance(Resource):
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('ninstances', type = int)
+        args = parser.parse_args()
+        ninstances = args['ninstances']
+
 api.add_resource(APIOnDemand, '/ondemand/')
 api.add_resource(APIScreening, '/screening/')
+
+api.add_resource(APIInstance, '/ninstances/')
 
 if __name__ == '__main__':
     app.run(
