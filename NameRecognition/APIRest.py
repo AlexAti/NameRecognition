@@ -32,7 +32,7 @@ f = open('./model/model.joblib', mode = 'wb+')
 dump(streener, f)
 f.close()
 
-class APIScreening(Resource):
+class APIOnDemand(Resource):
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument('key_party')
@@ -50,10 +50,32 @@ class APIScreening(Resource):
             'screen': streener.screen.to_dict(orient = 'list')
         }
 
+class APIScreening(Resource):
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('url')
+        parser.add_argument('query')
+        args = parser.parse_args()
+        print(args['url'])
+        print(args['query'])
+        from sqlalchmy import create_engine
+        con = create_engine(args['url'])
+        df = pd.read_sql_query(
+            con,
+            sql = args['query'],
+            index_col = None
+        )
+        df_filter = streener.screening(df)
+        return {
+            'df_filter': df_filter.to_dict(orient = 'list'),
+            'screen': streener.screen.to_dict(orient = 'list')
+        }
+
 class APILoadDataset(Resource):
     def get(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('path')
+        parser.add_argument('url')
+        parser.add_argument('query')
         args = parser.parse_args()
 
 class APILoadModel(Resource):
@@ -70,7 +92,9 @@ class APIThreshold(Resource):
         args = parser.parse_args()
         streener.threshold = args['threshold']
 
+api.add_resource(APIOnDemand, '/ondemand/')
 api.add_resource(APIScreening, '/screening/')
+
 api.add_resource(APILoadDataset, '/loaddataset/')
 api.add_resource(APILoadModel, '/loadmodel/')
 api.add_resource(APIThreshold, '/threshold/')
@@ -78,6 +102,7 @@ api.add_resource(APIThreshold, '/threshold/')
 if __name__ == '__main__':
     app.run(
         host = socket.gethostbyname(socket.gethostname()),
+        #host = '0.0.0.0',
         debug = True if os.environ.get('NAME_RECOGNITION_DEBUG') == None else os.environ.get('NAME_RECOGNITION_DEBUG') == 'True',
         port = 5000 if os.environ.get('NAME_RECOGNITION_PORT') == None else int(os.environ.get('NAME_RECOGNITION_PORT'))
     )

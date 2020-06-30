@@ -1,15 +1,24 @@
 version: "3.8"
 services:
-  name_recognition:
+  nr_node:
     build: 
       context: .
-      target: name_recognition
+      target: nr_node
     networks:
       nr_networks:
-  python:
+  nr_balancer:
+    build:
+      context: .
+      target: nr_balancer
+    restart: always
+    ports: 
+      - "5000:5000"
+    networks:
+      nr_networks:
+  nr_test:
     build: 
       context: .
-      target: test
+      target: nr_test
     networks: 
       nr_networks:
 

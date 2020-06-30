@@ -13,9 +13,9 @@ app = Flask('NameRecognitionAPIRest')
 api = Api(app)
 
 ninstances = 1
-url = 'http://namerecognition_name_recognition_{}:5000/screening/'
+url = 'http://namerecognition_name_recognition_{}:5000/'
 
-class APIScreening(Resource):
+class APIOnDemand(Resource):
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument('key_party')
@@ -23,7 +23,7 @@ class APIScreening(Resource):
         args = parser.parse_args()
         session = requests.Session()
         respond = session.get(
-            url = url.format(
+            url = (url + 'screening/').format(
                 random.randint(1,ninstances)
             ),
             params = {
@@ -33,6 +33,11 @@ class APIScreening(Resource):
         ).json()
         return(respond)
 
+class APIScreening(Resource):
+    def get(self):
+        pass
+
+api.add_resource(APIOnDemand, '/ondemand/')
 api.add_resource(APIScreening, '/screening/')
 
 if __name__ == '__main__':
