@@ -30,7 +30,7 @@ class NameRecognitionTest(unittest.TestCase):
         h = session.get(
             url = 'http://localhost:5000/ninstances/',
             params = {
-                'ninstances': 5
+                'ninstances': '5'
             }
         ).json()
         print(h)

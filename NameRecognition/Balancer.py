@@ -31,6 +31,7 @@ class APIOnDemand(Resource):
                 'value_party': args['value_party'],
             }
         ).json()
+        print('respuesta: ', respond)
         return(respond)
 
 class APIScreening(Resource):
