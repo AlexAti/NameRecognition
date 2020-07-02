@@ -16,7 +16,7 @@ api = Api(app)
 
 df_screen = pd.read_csv('data/names.csv')
 
-"""con = create_engine(
+con = create_engine(
     '{dialect}://{user}:{password}@{url}:{port}'.format(
         dialect = os.environ.get('NAME_RECOGNITION_SQL_DIALECT'),
         user = os.environ.get('NAME_RECOGNITION_SQL_USER'),
@@ -26,7 +26,7 @@ df_screen = pd.read_csv('data/names.csv')
     )
 ).connect()
 
-df_screen = pd.read_sql_query(
+"""df_screen = pd.read_sql_query(
     sql = os.environ.get('NAME_RECOGNITION_QUERY_SCREEN'),
     con = con,
     index_col = None
