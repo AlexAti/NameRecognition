@@ -100,8 +100,8 @@ api.add_resource(APIThreshold, '/threshold/')
 
 if __name__ == '__main__':
     app.run(
-        host = socket.gethostbyname(socket.gethostname()),
-        #host = '0.0.0.0',
+        #host = socket.gethostbyname(socket.gethostname()),
+        host = '192.168.0.28',
         debug = True if os.environ.get('NAME_RECOGNITION_DEBUG') == None else os.environ.get('NAME_RECOGNITION_DEBUG') == 'True',
-        port = 5000 if os.environ.get('NAME_RECOGNITION_PORT') == None else int(os.environ.get('NAME_RECOGNITION_PORT'))
+        port = 5001 if os.environ.get('NAME_RECOGNITION_PORT') == None else int(os.environ.get('NAME_RECOGNITION_PORT'))
     )

@@ -13,7 +13,22 @@ class NameRecognitionTest(unittest.TestCase):
         session = requests.Session()
 
         h = session.get(
-            url = 'http://localhost:5000/ondemand/',
+            url = 'http://192.168.0.28:5000/ondemand/',
+            params = {
+                'key_party': "prueba1",
+                'value_party': "minger felita girijarani",
+            }
+        ).json()
+        print(h)
+
+    def test_ondemand1(self):
+        import requests
+        import json
+
+        session = requests.Session()
+
+        h = session.get(
+            url = 'http://localhost:5001/ondemand/',
             params = {
                 'key_party': "prueba1",
                 'value_party': "minger felita girijarani",

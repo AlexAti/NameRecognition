@@ -13,10 +13,12 @@ app = Flask('NameRecognitionAPIRest')
 api = Api(app)
 
 ninstances = 1
-url = 'http://namerecognition_name_recognition_{}:5000/'
+url = 'http://namerecognition_name_recognition_{}:5001/'
+url = '192.168.0.28:5001/'
 
 class APIOnDemand(Resource):
     def get(self):
+        print('hola')
         parser = reqparse.RequestParser()
         parser.add_argument('key_party')
         parser.add_argument('value_party')
@@ -53,7 +55,8 @@ api.add_resource(APIInstance, '/ninstances/')
 
 if __name__ == '__main__':
     app.run(
-        host = socket.gethostbyname(socket.gethostname()),
+        #host = socket.gethostbyname(socket.gethostname()),
+        host = '192.168.0.28',
         debug = True if os.environ.get('NAME_RECOGNITION_DEBUG') == None else os.environ.get('NAME_RECOGNITION_DEBUG') == 'True',
         port = 5000 if os.environ.get('NAME_RECOGNITION_PORT') == None else int(os.environ.get('NAME_RECOGNITION_PORT'))
     )
