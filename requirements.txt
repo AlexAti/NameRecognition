@@ -4,3 +4,4 @@ pandas
 dill
 sklearn
 requests
+uwsgi

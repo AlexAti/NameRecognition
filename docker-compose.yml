@@ -6,13 +6,16 @@ services:
       target: nr_node
     networks:
       nr_networks:
+    ports: 
+      - "5000:5000"
   nr_balancer:
+    container_name: nr_balancer
     build:
       context: .
       target: nr_balancer
     restart: always
     ports: 
-      - "5000:5000"
+      - "5001:5001"
     networks:
       nr_networks:
   nr_test:
