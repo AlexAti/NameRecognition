@@ -1,6 +1,6 @@
 # NameRecognition
 
-NameRecognition es un módulo de Python pensado para detectar patrones de similitud complejos entre cádenas de texto de longitud pequeña. Comunmente la aplicación de este tipo de algoritmos viene dado por un conjunto de cotejo y un conjunto sobre el que cotejar. 
+NameRecognition es un módulo de Python pensado para detectar patrones de similitud complejos entre cádenas de texto de longitud pequeña. Comunmente la aplicación de este tipo de algoritmos viene dado por un nivel de abstracción superior. Se realizan un cotejos entre dos listas existentes dando como resultado la lista de emparejamientos entre ambas.
 
 ## Algoritmo
 La extracción de patrones se realiza en 3 pasos:
@@ -44,7 +44,25 @@ h = session.get(
 ).json()
 ```
 
-Incluye una imagen Docker que permite escalabilidad.
+# Docker
+El proyecto se puede iniciar construir y arrancar facilmente usando la imagen Docker:
+```docker
+docker run --rm -d  nr_node:latest
+```
+Puesto que el proyecto implementa una conexión estándar a base de datos relacional desde la que se puede cargar tanto la lista de cotejo como la lista contra lo que cotejar, nativamente permite una escalabilidad haciendo uso de docker-compose. Un ejemplo de orquestación simple sería el siguiente:
+```docker
+version: "3.8"
+services:
+  nr_node:
+    build: 
+      context: .
+      target: nr_node
+```
+
+Que se podría arrancar 5 instancias del contenedor de la siguiente forma:
+```docker
+docker-compose -f "docker-compose.yml" up -d --build --scale nr_node=5
+```
 
 ## Dependencias
 NameRecognition requiere de:
