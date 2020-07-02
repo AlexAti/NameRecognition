@@ -11,7 +11,7 @@ sys.path[0] = sys.path[0].replace('NameRecognition/NameRecognition','NameRecogni
 sys.path[0] = sys.path[0].replace('NameRecognition\\NameRecognition','NameRecognition')
 from NameRecognition.MLScreener import MLScreener
 
-app = Flask('NameRecognitionAPIRest')
+app = Flask(__name__)
 api = Api(app)
 
 df_screen = pd.read_csv('data/names.csv')
