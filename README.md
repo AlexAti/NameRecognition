@@ -44,7 +44,7 @@ h = session.get(
 ).json()
 ```
 
-# Docker
+## Docker
 El proyecto se puede iniciar construir y arrancar facilmente usando la imagen Docker:
 ```docker
 docker run --rm -d  nr_node:latest
