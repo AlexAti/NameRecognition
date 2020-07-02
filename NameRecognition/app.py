@@ -58,7 +58,7 @@ class APIScreening(Resource):
         args = parser.parse_args()
         print(args['url'])
         print(args['query'])
-        from sqlalchmy import create_engine
+        from sqlalchemy import create_engine
         con = create_engine(args['url'])
         df = pd.read_sql_query(
             con,
@@ -100,8 +100,8 @@ api.add_resource(APIThreshold, '/threshold/')
 
 if __name__ == '__main__':
     app.run(
-        #host = socket.gethostbyname(socket.gethostname()),
-        host = '192.168.0.28',
+        host = socket.gethostbyname(socket.gethostname()),
+        #host = '192.168.0.28',
         debug = True if os.environ.get('NAME_RECOGNITION_DEBUG') == None else os.environ.get('NAME_RECOGNITION_DEBUG') == 'True',
         port = 5001 if os.environ.get('NAME_RECOGNITION_PORT') == None else int(os.environ.get('NAME_RECOGNITION_PORT'))
     )

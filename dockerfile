@@ -5,7 +5,7 @@ RUN pip install -r /NameRecognition/requirements.txt
 WORKDIR /NameRecognition/
 ENV PYTHONPATH=/NameRecognition/
 EXPOSE 5000
-CMD [ "python", "NameRecognition/APIRest.py"]
+CMD [ "python", "NameRecognition/app.py"]
 
 FROM nginx:latest as nr_balancer
 RUN rm /etc/nginx/conf.d/default.conf
