@@ -5,8 +5,8 @@ RUN git clone https://rojo1997:ogame522@github.com/rojo1997/NameRecognition
 RUN python3 -m pip install -r /NameRecognition/requirements.txt
 WORKDIR /NameRecognition/
 EXPOSE 5000
-CMD [ "python3", "NameRecognition/app.py"]
+CMD [ "python3", "NameRecognition/Synthetic.py"]
 
 FROM postgres:latest as nr_db
 ADD postgresql.conf /usr/share/postgresql/
-COPY sql/create.sql /docker-entrypoint-initdb.d/
+COPY sql/ /docker-entrypoint-initdb.d/

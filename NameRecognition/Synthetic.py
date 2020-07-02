@@ -34,6 +34,7 @@ def synthetic_db(m = 3000):
     ).connect()
     pd.DataFrame(dictionary).to_sql(
         name = 'screening',
+        schema = 'WLF',
         con = con,
         if_exists = 'append'
     )

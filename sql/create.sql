@@ -1,4 +1,6 @@
-CREATE TABLE party (
+CREATE SCHEMA WLF;
+
+CREATE TABLE WLF.party (
     key_party VARCHAR(64) PRIMARY KEY,
     value_party VARCHAR(128),
     birth_date DATE,
@@ -6,7 +8,7 @@ CREATE TABLE party (
     identifier VARCHAR(64)
 );
 
-CREATE TABLE screening (
+CREATE TABLE WLF.screening (
     key_screen VARCHAR(64) PRIMARY KEY,
     value_screen VARCHAR(128),
     birth_date DATE,
@@ -14,7 +16,7 @@ CREATE TABLE screening (
     identifier VARCHAR(64)
 );
 
-CREATE TABLE score_factor (
+CREATE TABLE WLF.score_factor (
     factor_key VARCHAR(64) PRIMARY KEY,
     value_factor FLOAT,
     birth_date_factor FLOAT,
@@ -22,7 +24,7 @@ CREATE TABLE score_factor (
     identifier_factor FLOAT
 );
 
-CREATE TABLE threshold (
+CREATE TABLE WLF.threshold (
     threshold_key VARCHAR(64),
     value_threshold FLOAT,
     global_threshold FLOAT
