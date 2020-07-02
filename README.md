@@ -1,6 +1,6 @@
 # NameRecognition
 
-NameRecognition es un módulo de Python pensado para detectar patrones de similitud complejos entre cádenas de texto de longitud pequeña. Comunmente la aplicación de este tipo de algoritmos viene dado por un nivel de abstracción superior. Se realizan un cotejos entre dos listas existentes dando como resultado la lista de emparejamientos entre ambas.
+NameRecognition es un módulo escrito en Python pensado para detectar patrones de similitud complejos entre cádenas de texto de longitud corta. Comunmente la aplicación de este tipo de algoritmos viene dado por un nivel de abstracción superior. Se realizan cotejos a nivel de listas, y se obtiene como resultado la lista de emparejamientos entre ambas. Una de ellas suele adquirir un role estático, definiendose en este proyecto como lista de cotejo.
 
 ## Algoritmo
 La extracción de patrones se realiza en 3 pasos:
