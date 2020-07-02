@@ -13,6 +13,8 @@ Presenta un despliegue en forma de servicio API RESTFUL implementado sobre la bi
 
 **Cotejo individual**
 
+Una entidad se coteja contra la lista de cotejo estático cargada en la instancia en forma 1 VS ALL, obteniendo como resultado el conjunto de emperajamientos para esta entidad concreta.
+
 ```python
 import requests
 import json
@@ -29,6 +31,9 @@ h = session.get(
 ```
 
 **Cotejo colectivo**
+
+Se realiza una extracción de una base de datos relacional de una lista dinámica que se coteja en forma ALL VS ALL contra la lista estática de cotejo cargada en la instancia.
+
 ```python
 import requests
 import json
