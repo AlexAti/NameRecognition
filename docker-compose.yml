@@ -6,6 +6,8 @@ services:
       target: nr_node
     networks:
       nr_networks:
+    depends_on:
+      - postgres
     environment: 
       - NAME_RECOGNITION_SQL_DIALECT=postgresql
       - NAME_RECOGNITION_SQL_USER=postgres
@@ -13,8 +15,13 @@ services:
       - NAME_RECOGNITION_SQL_URL=namerecognition_postgres_1
       - NAME_RECOGNITION_SQL_PORT=5432
       - NAME_RECOGNITION_PORT=5000
+      - NAME_RECOGNITION_QUERY_SCREEN=SELECT key_screen, value_screen FROM screening;
+    ports:
+      - "5000:5000"
   postgres:
-    image: postgres:latest
+    build: 
+      context: .
+      target: nr_db
     volumes: 
       - data_postgres:/var/lib/postgresql/data
     restart: always

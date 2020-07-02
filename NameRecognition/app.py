@@ -5,7 +5,6 @@ from sqlalchemy import create_engine
 import pandas as pd
 import sys
 import os
-import socket
 
 sys.path[0] = sys.path[0].replace('NameRecognition/NameRecognition','NameRecognition')
 sys.path[0] = sys.path[0].replace('NameRecognition\\NameRecognition','NameRecognition')
@@ -26,13 +25,15 @@ con = create_engine(
     )
 ).connect()
 
-"""df_screen = pd.read_sql_query(
+df_screen = pd.read_sql_query(
     sql = os.environ.get('NAME_RECOGNITION_QUERY_SCREEN'),
     con = con,
     index_col = None
 )
 
-score_factor = pd.read_sql_query(
+print(df_screen.head(5))
+
+"""score_factor = pd.read_sql_query(
     sql = os.environ.get('NAME_RECOGNITION_QUERY_SCORE_FACTOR'),
     con = con,
     index_col = None
@@ -129,8 +130,7 @@ api.add_resource(APIThreshold, '/threshold/')
 
 if __name__ == '__main__':
     app.run(
-        #host = socket.gethostbyname(socket.gethostname()),
         host = "0.0.0.0",
-        debug = True if os.environ.get('NAME_RECOGNITION_DEBUG') == None else os.environ.get('NAME_RECOGNITION_DEBUG') == 'True',
+        debug = True if os.environ.get('NAME_RECOGNITION_DEBUG') == None else os.environ.get('NAME_RECOGNITION_DEBUG') == 'true',
         port = 5000 if os.environ.get('NAME_RECOGNITION_PORT') == None else int(os.environ.get('NAME_RECOGNITION_PORT'))
     )

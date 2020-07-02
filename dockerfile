@@ -9,3 +9,4 @@ CMD [ "python3", "NameRecognition/app.py"]
 
 FROM postgres:latest as nr_db
 ADD postgresql.conf /usr/share/postgresql/
+COPY sql/create.sql /docker-entrypoint-initdb.d/
