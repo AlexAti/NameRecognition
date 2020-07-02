@@ -66,7 +66,9 @@ docker-compose -f "docker-compose.yml" up -d --build --scale nr_node=5
 
 ## Dependencias
 NameRecognition requiere de:
-* sklearn
+* flask
+* flask_restful
 * pandas
 * dill
-* flask
+* sklearn
+* requests
