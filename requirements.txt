@@ -5,3 +5,4 @@ dill
 sklearn
 requests
 uwsgi
+psycopg2
