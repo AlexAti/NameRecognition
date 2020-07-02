@@ -57,5 +57,13 @@ class NameRecognitionTest(unittest.TestCase):
         from NameRecognition.Synthetic import synthetic_csv
         synthetic_csv()
 
+    def test_db_connexion(self):
+        from sqlalchemy import create_engine
+        con = create_engine('postgresql://postgres:password@localhost:5432').connect()
+
+    def test_environ(self):
+        import os
+        print(os.environ['VSCODE_PID'])
+
 if __name__ == "__main__":
     unittest.main(verbosity = 2)
