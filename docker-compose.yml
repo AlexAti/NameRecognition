@@ -6,25 +6,20 @@ services:
       target: nr_node
     networks:
       nr_networks:
-    ports: 
-      - "5000:5000"
-  nr_balancer:
-    container_name: nr_balancer
-    build:
-      context: .
-      target: nr_balancer
+  postgres:
+    image: postgres:latest
+    volumes: 
+      - data_postgres:/var/lib/postgresql/data
     restart: always
-    ports: 
-      - "5001:5001"
+    environment: 
+      - POSTGRES_PASSWORD=password
     networks:
       nr_networks:
-  nr_test:
-    build: 
-      context: .
-      target: nr_test
-    networks: 
-      nr_networks:
+    ports:
+      - "5432:5432" # postgres
 
 networks:
   nr_networks:
     driver: bridge
+volumes: 
+  data_postgres:
