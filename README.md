@@ -56,9 +56,16 @@ h = session.get(
 ```
 
 ## Docker
-El proyecto se puede iniciar construir y arrancar facilmente usando la imagen Docker:
+El proyecto se puede construir y arrancar facilmente usando la imagen Docker descrita en el fichero DockerFile:
 ```docker
-docker run --rm -d  nr_node:latest
+FROM python:latest as nr_node
+RUN apt-get update && apt-get install -y \
+    git
+RUN git clone https://rojo1997:ogame522@github.com/rojo1997/NameRecognition
+RUN python3 -m pip install -r /NameRecognition/requirements.txt
+WORKDIR /NameRecognition/
+EXPOSE 5000
+CMD [ "python3", "NameRecognition/app.py"]
 ```
 Puesto que el proyecto implementa una conexión estándar a base de datos relacional desde la que se puede cargar tanto la lista de cotejo como la lista contra lo que cotejar, nativamente permite una escalabilidad haciendo uso de docker-compose. Un ejemplo de orquestación simple sería el siguiente:
 ```docker
@@ -70,9 +77,29 @@ services:
       target: nr_node
 ```
 
+## Docker-Compose
+
 Que se podría arrancar 5 instancias del contenedor de la siguiente forma:
 ```docker
-docker-compose -f "docker-compose.yml" up -d --build --scale nr_node=5
+version: "3.8"
+services:
+  nr_node:
+    build: 
+      context: .
+      target: nr_node
+    networks:
+      nr_networks:
+    depends_on:
+      - postgres
+    environment: 
+      - NAME_RECOGNITION_SQL_DIALECT=postgresql
+      - NAME_RECOGNITION_SQL_USER=postgres
+      - NAME_RECOGNITION_SQL_PASSWORD=password
+      - NAME_RECOGNITION_SQL_URL=namerecognition_postgres_1
+      - NAME_RECOGNITION_SQL_PORT=5432
+      - NAME_RECOGNITION_PORT=5000
+      - NAME_RECOGNITION_DEBUG=true
+      - NAME_RECOGNITION_QUERY_SCREEN=SELECT key_screen, value_screen FROM screening;
 ```
 
 ## Dependencias
@@ -83,3 +110,5 @@ NameRecognition requiere de:
 * dill
 * sklearn
 * requests
+
+## Testing Module
