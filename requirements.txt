@@ -6,4 +6,4 @@ sklearn
 requests
 psycopg2
 sqlalchemy
-uwgsi
+uwsgi
