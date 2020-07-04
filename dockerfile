@@ -1,6 +1,7 @@
 FROM python:latest as nr_node
 RUN apt-get update && apt-get install -y \
-    git
+    git \
+    uwsgi
 RUN git clone https://rojo1997:ogame522@github.com/rojo1997/NameRecognition
 RUN python3 -m pip install -r /NameRecognition/requirements.txt
 WORKDIR /NameRecognition/
