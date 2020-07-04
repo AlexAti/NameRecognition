@@ -8,6 +8,7 @@ import os
 
 sys.path[0] = sys.path[0].replace('NameRecognition/NameRecognition','NameRecognition')
 sys.path[0] = sys.path[0].replace('NameRecognition\\NameRecognition','NameRecognition')
+os.chdir(path = '/NameRecognition')
 from NameRecognition.MLScreener import MLScreener
 
 app = Flask(__name__)
