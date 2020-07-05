@@ -6,3 +6,4 @@ sklearn
 requests
 psycopg2
 sqlalchemy
+swifter

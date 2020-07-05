@@ -29,3 +29,14 @@ CREATE TABLE WLF.threshold (
     value_threshold FLOAT,
     global_threshold FLOAT
 );
+
+CREATE TABLE WLF.hit (
+    key_party VARCHAR(64),
+    key_screen VARCHAR(64),
+    score FLOAT
+);
+
+CREATE TABLE WLF.alert (
+    key_alert VARCHAR(64),
+    key_party VARCHAR(64)
+);
