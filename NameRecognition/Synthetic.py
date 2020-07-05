@@ -24,7 +24,7 @@ def synthetic_db(m = 3000):
         dictionary.append({
             'value_screen': ' '.join(random.choices(lista, k=3)).replace("'",''),
             'key_screen': 'key_' + str(i),
-            'birth_date': datetime.strptime(str(random.randint(1900,2020)) + str(random.randint(1,12)) + str(random.randint(10,27)),"%Y%m%d"),
+            'birth_date': str(random.randint(1900,2020)) + '-' + str(random.randint(1,12)) + '-' + str(random.randint(10,27)),
             'birth_country': random.choice(['ES','FR','AG','AF','ID','IR']),
             'identifier': str(random.randint(1000000,9000000)) + random.choice(['b','c','d','f','g','h','j'])
         })
@@ -38,20 +38,16 @@ def synthetic_db(m = 3000):
             password = os.environ.get('NAME_RECOGNITION_SQL_PASSWORD'),
             url = os.environ.get('NAME_RECOGNITION_SQL_URL'),
             port = os.environ.get('NAME_RECOGNITION_SQL_PORT')
-        )
+        ), isolation_level = "AUTOCOMMIT"
     ).connect()
-    df.to_sql(
-        name = 'wlf.screening',
-        con = con,
-        if_exists = 'append',
-        dtype = {
-            'key_screen': VARCHAR(64),
-            'value_screen': VARCHAR(128),
-            'birth_date': DateTime(),
-            'birth_country': VARCHAR(16),
-            'identifier': VARCHAR(64)
-        }
-    )
+    for row in df.iterrows():
+        sql = "insert into wlf.screening (value_screen,key_screen,birth_date) values ('"
+        sql += row['value_screen'] + "','"
+        sql += row['key_screen'] + "','"
+        sql += row['birth_date'] + "','"
+        sql += row['birth_country'] + "','"
+        sql += row['identifier'] + "');"
+        con.execute(sql)
 
 if __name__ == "__main__":
     synthetic_db(m = 100000)
