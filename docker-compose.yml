@@ -16,11 +16,11 @@ services:
       - NAME_RECOGNITION_SQL_PORT=5432
       - NAME_RECOGNITION_PORT=5000
       - NAME_RECOGNITION_DEBUG=true
-      - NAME_RECOGNITION_QUERY_SCREEN=SELECT key_screen, value_screen FROM screening;
+      - NAME_RECOGNITION_QUERY_SCREEN=SELECT key_screen, value_screen FROM WLF.screening;
     ports:
       - "5000:5000"
   postgres:
-    build: 
+    build:
       context: .
       target: nr_db
     volumes: 

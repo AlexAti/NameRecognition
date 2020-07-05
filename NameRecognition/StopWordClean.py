@@ -6,6 +6,8 @@ import re
 from functools import reduce
 # Biblioteca ciencia de datos
 import pandas as pd
+# Biblioteca de paralelizado de apply
+import swifter
 
 class StopWordClean:
     def __init__(self, threshold = 0.50, min_df = 0.05, max_word = 1000, exceptions = None, copy = True, verbose = False):
@@ -43,11 +45,12 @@ class StopWordClean:
         self.copy = copy
 
     def standard_names(self, serie):
-        serie = serie.apply(self.estandar_name)
+        serie = serie.swifter.apply(self.estandar_name)
         return(serie)
 
     def word_filter(self, serie):
-        serie = serie.apply(lambda name: reduce(self.engine_filter, [name] + self.word_list))
+        serie = serie.swifter.apply(lambda name: reduce(self.engine_filter, [name] + self.word_list))
+        serie = serie.swifter.apply(lambda name: reduce(self.engine_filter, [name] + self.word_list))
         return(serie)
 
     def fit(self, serie):
@@ -80,7 +83,7 @@ class StopWordClean:
         serie_ = self.word_filter(serie_)
         if self.verbose: print("word filter")
         # Relimpiamos espacios
-        serie_ = serie_.apply(lambda s: re.sub('\s+', ' ', s).strip())
+        serie_ = serie_.swifter.apply(lambda s: re.sub('\s+', ' ', s).strip())
         if self.verbose: print("clean spaces")
         # Devolvemos el set tras la limpieza
         return(serie_)
