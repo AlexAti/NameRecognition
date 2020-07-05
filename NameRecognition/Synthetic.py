@@ -40,13 +40,14 @@ def synthetic_db(m = 3000):
             port = os.environ.get('NAME_RECOGNITION_SQL_PORT')
         ), isolation_level = "AUTOCOMMIT"
     ).connect()
-    for row in df.iterrows():
+    for i,row in df.iterrows():
         sql = "insert into wlf.screening (value_screen,key_screen,birth_date) values ('"
         sql += row['value_screen'] + "','"
         sql += row['key_screen'] + "','"
         sql += row['birth_date'] + "','"
         sql += row['birth_country'] + "','"
         sql += row['identifier'] + "');"
+        print(sql)
         con.execute(sql)
 
 if __name__ == "__main__":
