@@ -41,7 +41,7 @@ def synthetic_db(m = 3000):
         ), isolation_level = "AUTOCOMMIT"
     ).connect()
     for i,row in df.iterrows():
-        sql = "insert into wlf.screening (value_screen,key_screen,birth_date) values ('"
+        sql = "insert into wlf.screening (value_screen,key_screen,birth_date,birth_country,identifier) values ('"
         sql += row['value_screen'] + "','"
         sql += row['key_screen'] + "','"
         sql += row['birth_date'] + "','"
