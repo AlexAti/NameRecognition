@@ -48,7 +48,7 @@ threshold = pd.read_sql_query(
 
 print('sql: ', df_screen.shape)
 
-streener = MLScreener(
+screener = MLScreener(
     threshold = 0.50,
     df_screen = df_screen,
     key_screen = 'key_screen',
@@ -58,9 +58,9 @@ streener = MLScreener(
     verbose = False
 )
 
-streener.fit(df_screen['value_screen'])
+screener.fit(df_screen['value_screen'])
 f = open('./model/model.joblib', mode = 'wb+')
-dump(streener, f)
+dump(screener, f)
 f.close()
 
 class APIOnDemand(Resource):
@@ -75,10 +75,10 @@ class APIOnDemand(Resource):
             'key_party': args['key_party'],
             'value_party': args['value_party'],
         }])
-        df_filter = streener.screening(df)
+        df_filter = screener.screening(df)
         return {
             'df_filter': df_filter.to_dict(orient = 'list'),
-            'screen': streener.screen.to_dict(orient = 'list')
+            'screen': screener.screen.to_dict(orient = 'list')
         }
 
 class APIScreening(Resource):
@@ -96,10 +96,10 @@ class APIScreening(Resource):
             sql = args['query'],
             index_col = None
         )
-        df_filter = streener.screening(df)
+        df_filter = screener.screening(df)
         return {
             'df_filter': df_filter.to_dict(orient = 'list'),
-            'screen': streener.screen.to_dict(orient = 'list')
+            'screen': screener.screen.to_dict(orient = 'list')
         }
 
 class APILoadDataset(Resource):
@@ -120,7 +120,7 @@ class APIThreshold(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('threshold')
         args = parser.parse_args()
-        streener.threshold = args['threshold']
+        screener.threshold = args['threshold']
 
 api.add_resource(APIOnDemand, '/ondemand/')
 api.add_resource(APIScreening, '/screening/')

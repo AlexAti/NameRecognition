@@ -11,8 +11,8 @@ RUN mv python38_plugin.so /usr/lib/uwsgi/plugins/python38_plugin.so
 RUN chmod 644 /usr/lib/uwsgi/plugins/python38_plugin.so
 WORKDIR /NameRecognition/NameRecognition/
 EXPOSE 5000
-CMD [ "sleep", "1600"]
-#CMD [ "uwsgi", "--ini", "server.ini"]
+#CMD [ "sleep", "1600"]
+CMD [ "uwsgi", "--ini", "server.ini"]
 #CMD [ "python3", "NameRecognition/app.py"]
 
 FROM postgres:latest as nr_db
