@@ -6,10 +6,14 @@ import pandas as pd
 import sys
 import os
 
-sys.path[0] = sys.path[0].replace('NameRecognition/NameRecognition','NameRecognition')
-sys.path[0] = sys.path[0].replace('NameRecognition\\NameRecognition','NameRecognition')
-os.chdir(path = '/NameRecognition')
+#os.chdir(path = '/NameRecognition')
+from NameRecognition import environ
+
 from NameRecognition.MLScreener import MLScreener
+from NameRecognition.api import (
+    OnDemand,
+    Screening
+)
 
 app = Flask(__name__)
 api = Api(app)
@@ -34,22 +38,25 @@ df_screen = pd.read_sql_query(
 
 print(df_screen.head(5))
 
-"""score_factor = pd.read_sql_query(
-    sql = os.environ.get('NAME_RECOGNITION_QUERY_SCORE_FACTOR'),
+score_factor = pd.read_sql_query(
+    sql = "SELECT * FROM WLF.SCORE_FACTOR WHERE factor_key = '" + os.environ['NAME_RECOGNITION_SCORE_FACTOR'] + "'",
     con = con,
     index_col = None
-)
+).loc[0]
+print(score_factor)
 
 threshold = pd.read_sql_query(
-    sql = os.environ.get('NAME_RECOGNITION_QUERY_THRESHOLD'),
+    sql = "SELECT * FROM WLF.THRESHOLD WHERE threshold_key = '" + os.environ['NAME_RECOGNITION_THRESHOLD'] + "'",
     con = con,
     index_col = None
-)"""
+).loc[0]
+print(threshold)
 
 print('sql: ', df_screen.shape)
 
 screener = MLScreener(
-    threshold = 0.50,
+    threshold = threshold,
+    score_factor = score_factor,
     df_screen = df_screen,
     key_screen = 'key_screen',
     value_screen = 'value_screen',
@@ -63,75 +70,24 @@ f = open('./model/model.joblib', mode = 'wb+')
 dump(screener, f)
 f.close()
 
-class APIOnDemand(Resource):
-    def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('key_party')
-        parser.add_argument('value_party')
-        args = parser.parse_args()
-        print(args['key_party'])
-        print(args['value_party'])
-        df = pd.DataFrame([{
-            'key_party': args['key_party'],
-            'value_party': args['value_party'],
-        }])
-        df_filter = screener.screening(df)
-        return {
-            'df_filter': df_filter.to_dict(orient = 'list'),
-            'screen': screener.screen.to_dict(orient = 'list')
-        }
-
-class APIScreening(Resource):
-    def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('url')
-        parser.add_argument('query')
-        args = parser.parse_args()
-        print(args['url'])
-        print(args['query'])
-        from sqlalchemy import create_engine
-        con = create_engine(args['url'])
-        df = pd.read_sql_query(
-            con,
-            sql = args['query'],
-            index_col = None
-        )
-        df_filter = screener.screening(df)
-        return {
-            'df_filter': df_filter.to_dict(orient = 'list'),
-            'screen': screener.screen.to_dict(orient = 'list')
-        }
-
-class APILoadDataset(Resource):
-    def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('url')
-        parser.add_argument('query')
-        args = parser.parse_args()
-
-class APILoadModel(Resource):
-    def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('path')
-        args = parser.parse_args()
-
-class APIThreshold(Resource):
-    def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('threshold')
-        args = parser.parse_args()
-        screener.threshold = args['threshold']
-
-api.add_resource(APIOnDemand, '/ondemand/')
-api.add_resource(APIScreening, '/screening/')
-
-api.add_resource(APILoadDataset, '/loaddataset/')
-api.add_resource(APILoadModel, '/loadmodel/')
-api.add_resource(APIThreshold, '/threshold/')
+api.add_resource(
+    OnDemand, 
+    '/ondemand/',
+    resource_class_kwargs = {
+        'screener': screener
+    }
+)
+api.add_resource(
+    Screening, 
+    '/screening/',
+    resource_class_kwargs = {
+        'screener': screener
+    }
+)
 
 if __name__ == '__main__':
     app.run(
         host = "0.0.0.0",
         debug = True if os.environ.get('NAME_RECOGNITION_DEBUG') == None else os.environ.get('NAME_RECOGNITION_DEBUG') == 'true',
-        port = 5000 if os.environ.get('NAME_RECOGNITION_PORT') == None else int(os.environ.get('NAME_RECOGNITION_PORT'))
+        port = int(os.environ.get('NAME_RECOGNITION_PORT'))
     )

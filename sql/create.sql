@@ -31,9 +31,14 @@ CREATE TABLE WLF.threshold (
 );
 
 CREATE TABLE WLF.hit (
+    hit_id VARCHAR(64) PRIMARY KEY,
+    alert_id VARCHAR(64),
     key_party VARCHAR(64),
     key_screen VARCHAR(64),
-    score FLOAT
+    score FLOAT,
+    birth_contry_hit BOOLEAN,
+    birth_date_hit BOOLEAN,
+    identifier_hit BOOLEAN
 );
 
 CREATE TABLE WLF.alert (

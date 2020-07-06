@@ -1,3 +1,4 @@
+# Clase abstracta para construir comparadores de nombres
 class Screener():
     def __init__(self, screnning_list = None):
         self.screnning_list = screnning_list

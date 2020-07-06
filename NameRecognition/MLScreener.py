@@ -4,15 +4,25 @@ from NameRecognition.StopWordClean import StopWordClean
 import pandas as pd
 
 class MLScreener(Screener):
-    def __init__(self, threshold = None, df_screen = None, key_screen = None, value_screen = None, key_party = None, value_party = None, verbose = False):
+    def __init__(self, 
+        threshold = None, 
+        score_factor = None,
+        df_screen = None, 
+        key_screen = None, 
+        value_screen = None, 
+        key_party = None, 
+        value_party = None, 
+        verbose = False
+    ):
         self.SWC = StopWordClean(verbose = verbose)
-        self.CSChar = CSChar(threshold = threshold, verbose = True)
+        self.CSChar = CSChar(threshold = threshold['value_threshold'] / 100, verbose = True)
         self.df_screen = df_screen
         self.key_screen = key_screen
         self.value_screen = value_screen
         self.key_party = key_party
         self.value_party = value_party
         self.threshold = threshold
+        self.score_factor = score_factor
 
     def fit(self, serie):
         serie_ = self.SWC.fit_clean(serie)
@@ -29,11 +39,43 @@ class MLScreener(Screener):
             value1 = 'clean',
             value2 = 'clean'
         )
+        self.screen = pd.merge(
+            left = self.screen,
+            right = self.df_screen,
+            how = 'left',
+            on = self.key_screen
+        )
+        self.screen.rename({
+            'birth_date': 'birth_date_screen',
+            'birth_country': 'birth_country_screen',
+            'identifier': 'identifier_screen'
+        }, axis = 1, inplace = True)
+        self.screen = pd.merge(
+            left = self.screen,
+            right = df,
+            how = 'left',
+            on = self.key_party
+        )
+        self.screen.rename({
+            'birth_date': 'birth_date_party',
+            'birth_country': 'birth_country_party',
+            'identifier': 'identifier_party'
+        }, axis = 1, inplace = True)
+        self.screen['global_score'] = self.screen.apply(
+            lambda row: 
+                self.score_factor['birth_country_factor'] * (row['birth_country_party'] == row['birth_country_screen']) +
+                self.score_factor['identifier_factor'] * (row['identifier_party'] == row['identifier_screen']) +
+                row['score'] * 100
+        , axis = 1)
+        self.screen.drop(self.screen.columns.difference(
+            ['key_screen','key_party','score','global_score']
+        ), axis = 1, inplace = True)
         # Filtro de aparicion
         ids = set(self.screen[self.key_party])
         df.drop(
             df[df[self.key_party].apply(lambda key: key not in ids)].index
         , inplace = True, axis = 0)
+        print('debug')
         # Calculo de score
         df = pd.merge(
             left = df,

@@ -16,7 +16,10 @@ class NameRecognitionTest(unittest.TestCase):
             url = 'http://localhost:5000/ondemand/',
             params = {
                 'key_party': "prueba1",
-                'value_party': "minger felita girijarani",
+                'value_party': "daquisha braedan madhavan",
+                'birth_date': "1999-03-26",
+                'birth_country': "ID",
+                'identifier': "8346836g"
             }
         ).json()
         print(h)
@@ -24,14 +27,24 @@ class NameRecognitionTest(unittest.TestCase):
     def test_ondemand1(self):
         import requests
         import json
+        import os
+        from NameRecognition import environ
 
         session = requests.Session()
+        url = '{dialect}://{user}:{password}@{url}:{port}'.format(
+            dialect = os.environ.get('NAME_RECOGNITION_SQL_DIALECT'),
+            user = os.environ.get('NAME_RECOGNITION_SQL_USER'),
+            password = os.environ.get('NAME_RECOGNITION_SQL_PASSWORD'),
+            url = os.environ.get('NAME_RECOGNITION_SQL_URL'),
+            port = os.environ.get('NAME_RECOGNITION_SQL_PORT')
+        )
+        print(url)
 
         h = session.get(
-            url = 'http://localhost:5000/ondemand/',
+            url = 'http://localhost:5000/screening/',
             params = {
-                'key_party': "prueba1",
-                'value_party': "minger felita girijarani",
+                'url': url,
+                'query': "select * from wlf.screening limit 1000;",
             }
         ).json()
         print(h)

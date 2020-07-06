@@ -5,6 +5,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.types import *
 from datetime import datetime
 
+from NameRecognition import environ
+
 def synthetic_csv(m = 3000):
     f = open('data/names.txt', mode = 'r', encoding = 'utf8')
     lista = list(map(lambda s: s.replace('\n', ''),f.readlines()))
@@ -49,6 +51,43 @@ def synthetic_db(m = 3000):
         sql += row['identifier'] + "');"
         print(sql)
         con.execute(sql)
+    sql = "insert into wlf.score_factor (factor_key,value_factor,birth_date_factor,birth_country_factor,identifier_factor) values ('"
+    sql += 'key_0' + "',"
+    sql += '1.0' + ","
+    sql += '10.0' + ","
+    sql += '5.0' + ","
+    sql += '50.0' + ");"
+    con.execute(sql)
+
+    sql = "insert into wlf.threshold (threshold_key,value_threshold,global_threshold) values ('"
+    sql += 'key_0' + "',"
+    sql += '70' + ","
+    sql += '100' + ");"
+    con.execute(sql)
+
+def prueba():
+    import pandas as pd
+    import numpy as np
+
+    con = create_engine(
+        '{dialect}://{user}:{password}@{url}:{port}'.format(
+            dialect = os.environ.get('NAME_RECOGNITION_SQL_DIALECT'),
+            user = os.environ.get('NAME_RECOGNITION_SQL_USER'),
+            password = os.environ.get('NAME_RECOGNITION_SQL_PASSWORD'),
+            url = os.environ.get('NAME_RECOGNITION_SQL_URL'),
+            port = os.environ.get('NAME_RECOGNITION_SQL_PORT')
+        )
+    ).connect()
+    df = pd.DataFrame(np.random.randint(0,1000,size=(1000, 4)), columns=list('ABCD'))
+    print(df.shape)
+
+    df.to_sql(
+        name = "mi_tabla",
+        con = con,
+        schema = "wlf",
+        index = False
+    )
 
 if __name__ == "__main__":
-    synthetic_db(m = 100000)
+    prueba()
+    #synthetic_db(m = 100000)
