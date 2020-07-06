@@ -53,7 +53,7 @@ h = session.get(
     url = 'http://localhost:5000/ondemand/',
     params = {
         'url': "postgresql+pg8000://scott:tiger@localhost/test",
-        'sql': "select key_party, value_party from table_example",
+        'sql': "select * from table_example",
     }
 ).json()
 ```
@@ -121,3 +121,21 @@ NameRecognition requiere de:
 * requests
 
 ## Testing Module
+
+El fichero [environ.py](https://github.com/rojo1997/NameRecognition/blob/master/NameRecognition/environ.py) aporta 
+un entorno de variables de sistema equivalente al desplegado por la imagen Docker.
+
+```python
+import os
+
+os.environ['NAME_RECOGNITION_SQL_DIALECT'] = 'postgresql'
+os.environ['NAME_RECOGNITION_SQL_USER'] = 'postgres'
+os.environ['NAME_RECOGNITION_SQL_PASSWORD'] = 'password'
+os.environ['NAME_RECOGNITION_SQL_URL'] = 'localhost'
+os.environ['NAME_RECOGNITION_SQL_PORT'] = '5432'
+os.environ['NAME_RECOGNITION_PORT'] = '5000'
+os.environ['NAME_RECOGNITION_DEBUG'] = 'true'
+os.environ['NAME_RECOGNITION_QUERY_SCREEN'] = 'SELECT * FROM WLF.screening limit 1000;'
+os.environ['NAME_RECOGNITION_SCORE_FACTOR'] = 'key_0'
+os.environ['NAME_RECOGNITION_THRESHOLD'] = 'key_0'
+```
