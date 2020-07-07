@@ -12,7 +12,7 @@ class NameRecognitionTest(unittest.TestCase):
 
         session = requests.Session()
 
-        h = session.get(
+        result = session.get(
             url = 'http://localhost:5000/ondemand/',
             params = {
                 'key_party': "prueba1",
@@ -22,7 +22,10 @@ class NameRecognitionTest(unittest.TestCase):
                 'identifier': "8346836g"
             }
         ).json()
-        print(h)
+        df_filter = pd.DataFrame(result['df_filter'])
+        print(df_filter)
+        screen = pd.DataFrame(result['screen'])
+        print(screen)
 
     def test_ondemand1(self):
         import requests
@@ -44,7 +47,7 @@ class NameRecognitionTest(unittest.TestCase):
             url = 'http://localhost:5000/screening/',
             params = {
                 'url': url,
-                'query': "select * from wlf.screening limit 1000;",
+                'query': "select key_screen as key_party,value_screen as value_party,birth_date,birth_country,identifier from wlf.screening limit 1000;",
             }
         ).json()
         print(h)

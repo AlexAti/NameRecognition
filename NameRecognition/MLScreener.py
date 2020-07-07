@@ -15,7 +15,7 @@ class MLScreener(Screener):
         verbose = False
     ):
         self.SWC = StopWordClean(verbose = verbose)
-        self.CSChar = CSChar(threshold = threshold['value_threshold'] / 100, verbose = True)
+        self.CSChar = CSChar(threshold = threshold['value_threshold'] / 100.0, verbose = True)
         self.df_screen = df_screen
         self.key_screen = key_screen
         self.value_screen = value_screen
@@ -30,7 +30,9 @@ class MLScreener(Screener):
         self.df_screen['clean'] = self.SWC.clean(self.df_screen[self.value_screen])
 
     def screening(self, df, field = None):
+        # Limpieza del nombre
         df['clean'] = self.SWC.clean(df[self.value_party])
+        # Cotejo de nombre
         self.screen = self.CSChar.screen(
             df1 = self.df_screen,
             df2 = df,
@@ -39,28 +41,28 @@ class MLScreener(Screener):
             value1 = 'clean',
             value2 = 'clean'
         )
+        # Aplicación de los score_factor
         self.screen = pd.merge(
             left = self.screen,
             right = self.df_screen,
             how = 'left',
             on = self.key_screen
-        )
-        self.screen.rename({
+        ).rename({
             'birth_date': 'birth_date_screen',
             'birth_country': 'birth_country_screen',
             'identifier': 'identifier_screen'
-        }, axis = 1, inplace = True)
+        }, axis = 1)
         self.screen = pd.merge(
             left = self.screen,
             right = df,
             how = 'left',
             on = self.key_party
-        )
-        self.screen.rename({
+        ).rename({
             'birth_date': 'birth_date_party',
             'birth_country': 'birth_country_party',
             'identifier': 'identifier_party'
-        }, axis = 1, inplace = True)
+        }, axis = 1)
+        # Calculo de la puntuación global
         self.screen['global_score'] = self.screen.apply(
             lambda row: 
                 self.score_factor['birth_country_factor'] * (row['birth_country_party'] == row['birth_country_screen']) +
@@ -70,12 +72,15 @@ class MLScreener(Screener):
         self.screen.drop(self.screen.columns.difference(
             ['key_screen','key_party','score','global_score']
         ), axis = 1, inplace = True)
+        # Fitro puntuación global
+        self.screen.drop(
+            self.screen[self.screen['global_score'] < self.threshold['global_threshold']].index
+        , axis = 0, inplace = True)
         # Filtro de aparicion
         ids = set(self.screen[self.key_party])
         df.drop(
             df[df[self.key_party].apply(lambda key: key not in ids)].index
         , inplace = True, axis = 0)
-        print('debug')
         # Calculo de score
         df = pd.merge(
             left = df,
