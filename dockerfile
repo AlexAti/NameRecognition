@@ -3,9 +3,9 @@ RUN apt-get update && apt-get install -y \
     git \
     uwsgi \
     uwsgi-src
-ADD github.pass /
-RUN git clone https://rojo1997:`cat /github.pass`@github.com/rojo1997/NameRecognition
-RUN rm github.pass
+ADD github /
+RUN git clone https://`cat /github`@github.com/rojo1997/NameRecognition
+RUN rm github
 RUN python3 -m pip install -r /NameRecognition/requirements.txt
 RUN export PYTHON=python3.8
 RUN uwsgi --build-plugin "/usr/src/uwsgi/plugins/python python38"

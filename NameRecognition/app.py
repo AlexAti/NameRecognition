@@ -6,8 +6,8 @@ import pandas as pd
 import sys
 import os
 
-#os.chdir(path = '/NameRecognition')
-from NameRecognition import environ
+os.chdir(path = '/NameRecognition')
+#from NameRecognition import environ
 
 from NameRecognition.MLScreener import MLScreener
 from NameRecognition.api import (
