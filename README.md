@@ -32,6 +32,9 @@ h = session.get(
     params = {
         'key_party': "test",
         'value_party': "minger felita girijarani",
+        'birth_date': "1999-03-26",
+        'birth_country': "ID",
+        'identifier': "8346836g"
     }
 ).json()
 ```
@@ -50,14 +53,14 @@ h = session.get(
     url = 'http://localhost:5000/ondemand/',
     params = {
         'url': "postgresql+pg8000://scott:tiger@localhost/test",
-        'sql': "select key_party, value_party from table_example",
+        'sql': "select * from table_example",
     }
 ).json()
 ```
 
 ## Docker
 El proyecto se puede construir y arrancar facilmente usando la imagen Docker descrita en el fichero DockerFile:
-```docker
+```dockerfile
 FROM python:latest as nr_node
 RUN apt-get update && apt-get install -y \
     git \
@@ -74,7 +77,7 @@ EXPOSE 5000
 CMD [ "uwsgi", "--ini", "server.ini"]
 ```
 Puesto que el proyecto implementa una conexión estándar a base de datos relacional desde la que se puede cargar tanto la lista de cotejo como la lista contra lo que cotejar, nativamente permite una escalabilidad haciendo uso de docker-compose. Un ejemplo de orquestación simple sería el siguiente:
-```docker
+```yml
 version: "3.8"
 services:
   nr_node:
@@ -86,7 +89,7 @@ services:
 ## Docker-Compose
 
 Que se podría arrancar 5 instancias del contenedor de la siguiente forma:
-```docker
+```yml
 version: "3.8"
 services:
   nr_node:
@@ -118,3 +121,21 @@ NameRecognition requiere de:
 * requests
 
 ## Testing Module
+
+El fichero [environ.py](https://github.com/rojo1997/NameRecognition/blob/master/NameRecognition/environ.py) aporta 
+un entorno de variables de sistema equivalente al desplegado por la imagen Docker.
+
+```python
+import os
+
+os.environ['NAME_RECOGNITION_SQL_DIALECT'] = 'postgresql'
+os.environ['NAME_RECOGNITION_SQL_USER'] = 'postgres'
+os.environ['NAME_RECOGNITION_SQL_PASSWORD'] = 'password'
+os.environ['NAME_RECOGNITION_SQL_URL'] = 'localhost'
+os.environ['NAME_RECOGNITION_SQL_PORT'] = '5432'
+os.environ['NAME_RECOGNITION_PORT'] = '5000'
+os.environ['NAME_RECOGNITION_DEBUG'] = 'true'
+os.environ['NAME_RECOGNITION_QUERY_SCREEN'] = 'SELECT * FROM WLF.screening limit 1000;'
+os.environ['NAME_RECOGNITION_SCORE_FACTOR'] = 'key_0'
+os.environ['NAME_RECOGNITION_THRESHOLD'] = 'key_0'
+```
