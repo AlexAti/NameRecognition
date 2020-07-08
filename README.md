@@ -39,6 +39,10 @@ h = session.get(
 ).json()
 ```
 
+La salida es estructura en dos componentes dentro de la respuesta:
+* Entidad contejada con puntuación máxima sobre el conjunto de emparejamientos.
+* Tabla de emparejamientos con puntuaciones individuales.
+
 **Cotejo colectivo**
 
 Se realiza una extracción de una base de datos relacional de una lista dinámica que se coteja en forma ALL VS ALL contra la lista estática de cotejo cargada en la instancia.
@@ -57,6 +61,7 @@ h = session.get(
     }
 ).json()
 ```
+La salida indica la conexción y las tablas de base de datos donde se ha volcado el cotejo.
 
 ## Docker
 El proyecto se puede construir y arrancar facilmente usando la imagen Docker descrita en el fichero DockerFile:
