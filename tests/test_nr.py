@@ -30,6 +30,7 @@ class NameRecognitionTest(unittest.TestCase):
         import requests
         import json
         import os
+        import platform
         from NameRecognition import environ
 
         session = requests.Session()
@@ -37,7 +38,7 @@ class NameRecognitionTest(unittest.TestCase):
             dialect = os.environ.get('NAME_RECOGNITION_SQL_DIALECT'),
             user = os.environ.get('NAME_RECOGNITION_SQL_USER'),
             password = os.environ.get('NAME_RECOGNITION_SQL_PASSWORD'),
-            url = os.environ.get('NAME_RECOGNITION_SQL_URL'),
+            url = 'namerecognition_postgres_1',#os.environ.get('NAME_RECOGNITION_SQL_URL'),
             port = os.environ.get('NAME_RECOGNITION_SQL_PORT')
         )
         print(url)
@@ -46,29 +47,10 @@ class NameRecognitionTest(unittest.TestCase):
             url = 'http://localhost:5000/batch/',
             params = {
                 'url': url,
-                #'query': "select key_screen as key_party,value_screen as value_party,birth_date,birth_country,identifier from wlf.screening limit 1000;",
-                'query': "select key_party,value_party,birth_date,birth_country,identifier from wlf.party limit 10000;",
+                'query': "select * from wlf.party limit 9000;",
             }
         ).json()
         print(h)
-
-    def test_ninstances(self):
-        import requests
-        import json
-
-        session = requests.Session()
-
-        h = session.get(
-            url = 'http://localhost:5000/ninstances/',
-            params = {
-                'ninstances': '5'
-            }
-        ).json()
-        print(h)
-
-    def test_environ(self):
-        import os
-        print(os.environ['VSCODE_PID'])
 
 if __name__ == "__main__":
     unittest.main(verbosity = 2)
