@@ -73,6 +73,8 @@ class MLScreener(Screener):
             'identifier': 'identifier_party'
         }, axis = 1)
         # Calculo de la puntuación global
+        print(self.screen.columns)
+        print(self.screen.dtypes)
         self.screen['global_score'] = self.screen.apply(
             lambda row: 
                 self.score_factor['birth_country_factor'] * (row['birth_country_party'] == row['birth_country_screen']) +
