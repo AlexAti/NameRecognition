@@ -41,6 +41,16 @@ class MLScreener(Screener):
             value1 = 'clean',
             value2 = 'clean'
         )
+        print('screen: ', self.screen.shape)
+        if self.screen.shape[0] == 0:
+            df = pd.DataFrame(columns = [
+                'key_party',
+                'value_party',
+                'birth_date',
+                'birth_country',
+                'identifier'
+            ])
+            return(df)
         # Aplicación de los score_factor
         self.screen = pd.merge(
             left = self.screen,
@@ -88,4 +98,5 @@ class MLScreener(Screener):
             how = 'inner',
             on = self.key_party
         )
+        print('columns: ',df.columns)
         return df

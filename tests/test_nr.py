@@ -27,7 +27,7 @@ class NameRecognitionTest(unittest.TestCase):
         screen = pd.DataFrame(result['screen'])
         print(screen)
 
-    def test_ondemand1(self):
+    def test_batch(self):
         import requests
         import json
         import os
@@ -44,10 +44,11 @@ class NameRecognitionTest(unittest.TestCase):
         print(url)
 
         h = session.get(
-            url = 'http://localhost:5000/screening/',
+            url = 'http://localhost:5000/batch/',
             params = {
                 'url': url,
-                'query': "select key_screen as key_party,value_screen as value_party,birth_date,birth_country,identifier from wlf.screening limit 1000;",
+                #'query': "select key_screen as key_party,value_screen as value_party,birth_date,birth_country,identifier from wlf.screening limit 1000;",
+                'query': "select key_party,value_party,birth_date,birth_country,identifier from wlf.party limit 10000;",
             }
         ).json()
         print(h)
@@ -65,17 +66,6 @@ class NameRecognitionTest(unittest.TestCase):
             }
         ).json()
         print(h)
-    
-    def test_synthetic(self):
-        print(sys.path)
-
-    def test_synthetic_csv(self):
-        from NameRecognition.Synthetic import synthetic_csv
-        synthetic_csv()
-
-    def test_db_connexion(self):
-        from sqlalchemy import create_engine
-        con = create_engine('postgresql://postgres:password@localhost:5432').connect()
 
     def test_environ(self):
         import os
