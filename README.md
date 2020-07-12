@@ -3,7 +3,7 @@
 NameRecognition es un módulo escrito en Python pensado para detectar patrones de similitud complejos entre cádenas de texto de longitud corta. Comunmente la aplicación de este tipo de algoritmos viene dado por un nivel de abstracción superior. Se realizan cotejos a nivel de listas, y se obtiene como resultado la lista de emparejamientos entre ambas. Una de ellas suele adquirir un role estático, definiendose en este proyecto como lista de cotejo.
 
 ## Instalación
-Una posible instalación sería la siguiente:
+La instalación de este módulo se realiza mediante la siguiente instrucción:
 ```bash
 python setup.py install
 ```
@@ -13,6 +13,7 @@ La extracción de patrones se realiza en 3 pasos:
 1) [Limpieza de stopwords](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html): se entrena un modelo parametrizable basado en frecuencias que extrae las palabras menos significativas para un conjunto de cadenas de texto. Posteriormente dichas cadenas se sustituyen por vacío.
 2) [Frecuencia de términos](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html): sobre el conjunto de cadenas limpio se calcula un modelo basado en frecuencias de caracteres. Como resultado de su aplicación se obtiene del corpus una matriz dispersa de vectores de la misma dimensión.
 3) [Similitud coseno](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.cosine_similarity.html#sklearn.metrics.pairwise.cosine_similarity): para cada posible par de coordenadas extraidas de los dos conjuntos se aplica la similitud coseno dando como resultado la matriz de adyacencia que conecta dichos conjuntos.
+4) Comparación de campos segundarios.
 
 ## Servicio y despliegue
 Presenta un despliegue en forma de servicio API RESTFUL implementado sobre la biblioteca [flask](https://flask.palletsprojects.com/en/1.1.x/) que implementa principalmente dos funcionalidades:
@@ -124,6 +125,8 @@ NameRecognition requiere de:
 * dill
 * sklearn
 * requests
+
+El servidor rest se levanta sobre un servidor de aplicaciones [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/) que configura principalmente el número de procesos para concurrencia del servicio.
 
 ## Testing Module
 
