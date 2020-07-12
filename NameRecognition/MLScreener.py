@@ -77,9 +77,9 @@ class MLScreener(Screener):
         print(self.screen.dtypes)
         self.screen['global_score'] = self.screen.apply(
             lambda row: 
-                self.score_factor['birth_country_factor'] * (row['birth_country_party'] == row['birth_country_screen']) +
-                self.score_factor['identifier_factor'] * (row['identifier_party'] == row['identifier_screen']) +
-                row['score'] * 100
+                (self.score_factor['birth_country_factor'] * (row['birth_country_party'] == row['birth_country_screen'])) +
+                (self.score_factor['identifier_factor'] * (row['identifier_party'] == row['identifier_screen'])) +
+                (self.score_factor['value_factor'] * (row['score'] * 100))
         , axis = 1)
         self.screen.drop(self.screen.columns.difference(
             ['key_screen','key_party','score','global_score']

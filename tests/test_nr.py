@@ -11,7 +11,6 @@ class NameRecognitionTest(unittest.TestCase):
         import json
 
         session = requests.Session()
-
         result = session.get(
             url = 'http://localhost:5000/ondemand/',
             params = {
