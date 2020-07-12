@@ -72,7 +72,7 @@ RUN apt-get update && apt-get install -y \
     git \
     uwsgi \
     uwsgi-src
-RUN git clone https://rojo1997:ogame522@github.com/rojo1997/NameRecognition
+RUN git clone https://`cat /github`@github.com/rojo1997/NameRecognition
 RUN python3 -m pip install -r /NameRecognition/requirements.txt
 RUN export PYTHON=python3.8
 RUN uwsgi --build-plugin "/usr/src/uwsgi/plugins/python python38"
