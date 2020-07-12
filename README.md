@@ -99,11 +99,10 @@ Que se podría arrancar 5 instancias del contenedor de la siguiente forma:
 version: "3.8"
 services:
   nr_node:
-    build: 
-      context: .
-      target: nr_node
+    image: namerecognition
     networks:
       nr_networks:
+    restart: always
     depends_on:
       - postgres
     environment: 
@@ -114,7 +113,28 @@ services:
       - NAME_RECOGNITION_SQL_PORT=5432
       - NAME_RECOGNITION_PORT=5000
       - NAME_RECOGNITION_DEBUG=true
-      - NAME_RECOGNITION_QUERY_SCREEN=SELECT key_screen, value_screen FROM screening;
+      - NAME_RECOGNITION_QUERY_SCREEN=SELECT * FROM WLF.screening;
+      - NAME_RECOGNITION_SCORE_FACTOR=key_0
+      - NAME_RECOGNITION_THRESHOLD=key_0
+    ports:
+      - "5000:5000"
+  postgres:
+    image: datamodel
+    volumes: 
+      - data_postgres:/var/lib/postgresql/data
+    restart: always
+    environment: 
+      - POSTGRES_PASSWORD=password
+    networks:
+      nr_networks:
+    ports:
+      - "5432:5432" # postgres
+
+networks:
+  nr_networks:
+    driver: bridge
+volumes: 
+  data_postgres:
 ```
 
 ## Dependencias
