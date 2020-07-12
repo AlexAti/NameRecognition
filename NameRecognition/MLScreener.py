@@ -57,11 +57,16 @@ class MLScreener(Screener):
             right = self.df_screen,
             how = 'left',
             on = self.key_screen
-        ).rename({
+        )
+        print(self.screen.columns)
+        print(self.screen.dtypes)
+        self.screen = self.screen.rename({
             'birth_date': 'birth_date_screen',
             'birth_country': 'birth_country_screen',
             'identifier': 'identifier_screen'
         }, axis = 1)
+        print(self.screen.columns)
+        print(self.screen.dtypes)
         self.screen = pd.merge(
             left = self.screen,
             right = df,
