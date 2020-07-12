@@ -16,10 +16,10 @@ class NameRecognitionTest(unittest.TestCase):
             url = 'http://localhost:5000/ondemand/',
             params = {
                 'key_party': "prueba1",
-                'value_party': "daquisha braedan madhavan",
-                'birth_date': "1999-03-26",
-                'birth_country': "ID",
-                'identifier': "8346836g"
+                'value_party': "miquisha shinsuke blouncie",
+                'birth_date': "1988-03-26",
+                'birth_country': "AG",
+                'identifier': "5100235j"
             }
         ).json()
         df_filter = pd.DataFrame(result['df_filter'])
