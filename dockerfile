@@ -16,8 +16,3 @@ EXPOSE 5000
 #CMD [ "sleep", "1600"]
 CMD [ "uwsgi", "--ini", "server.ini"]
 #CMD [ "python3", "NameRecognition/app.py"]
-
-FROM postgres:latest as nr_db
-ADD postgresql.conf /usr/share/postgresql/
-COPY sql/ /docker-entrypoint-initdb.d/
-EXPOSE 5432

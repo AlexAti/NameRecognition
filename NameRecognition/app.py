@@ -5,20 +5,21 @@ from sqlalchemy import create_engine
 import pandas as pd
 import sys
 import os
+import platform
 
-os.chdir(path = '/NameRecognition')
-#from NameRecognition import environ
+if platform.system() != 'Windows': 
+    os.chdir(path = '/NameRecognition')
+else:
+    from NameRecognition import environ
 
 from NameRecognition.MLScreener import MLScreener
 from NameRecognition.api import (
     OnDemand,
-    Screening
+    Batch
 )
 
 app = Flask(__name__)
 api = Api(app)
-
-df_screen = pd.read_csv('data/names.csv')
 
 con = create_engine(
     '{dialect}://{user}:{password}@{url}:{port}'.format(
@@ -78,16 +79,21 @@ api.add_resource(
     }
 )
 api.add_resource(
-    Screening, 
-    '/screening/',
+    Batch, 
+    '/batch/',
     resource_class_kwargs = {
         'screener': screener
     }
 )
 
 if __name__ == '__main__':
-    app.run(
-        host = "0.0.0.0",
-        debug = True if os.environ.get('NAME_RECOGNITION_DEBUG') == None else os.environ.get('NAME_RECOGNITION_DEBUG') == 'true',
-        port = int(os.environ.get('NAME_RECOGNITION_PORT'))
-    )
+    params = {
+        'host': "0.0.0.0",
+        'debug': True,
+        'port': 5000
+    }
+    if os.environ.get('NAME_RECOGNITION_DEBUG') != None:
+        params['debug'] = os.environ['NAME_RECOGNITION_DEBUG']
+    if os.environ.get('NAME_RECOGNITION_PORT') != None:
+        params['port'] = int(os.environ['NAME_RECOGNITION_PORT'])
+    app.run(**params)

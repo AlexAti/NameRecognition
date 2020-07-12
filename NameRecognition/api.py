@@ -30,7 +30,7 @@ class OnDemand(Resource):
             'screen': self.screener.screen.to_dict(orient = 'list')
         }
 
-class Screening(Resource):
+class Batch(Resource):
     def __init__(self, screener):
         self.screener = screener
         self.parser = reqparse.RequestParser()

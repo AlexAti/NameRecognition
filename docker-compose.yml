@@ -1,11 +1,10 @@
 version: "3.8"
 services:
   nr_node:
-    build: 
-      context: .
-      target: nr_node
+    image: namerecognition
     networks:
       nr_networks:
+    restart: always
     depends_on:
       - postgres
     environment: 
@@ -22,9 +21,7 @@ services:
     ports:
       - "5000:5000"
   postgres:
-    build:
-      context: .
-      target: nr_db
+    image: datamodel
     volumes: 
       - data_postgres:/var/lib/postgresql/data
     restart: always
