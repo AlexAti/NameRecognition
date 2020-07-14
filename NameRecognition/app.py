@@ -12,7 +12,7 @@ if platform.system() != 'Windows':
 else:
     from NameRecognition import environ
 
-from NameRecognition.MLScreener import MLScreener
+from NameRecognition.Estimator import TMEstimator
 from NameRecognition.api import (
     OnDemand,
     Batch
@@ -55,34 +55,33 @@ print(threshold)
 
 print('sql: ', df_screen.shape)
 
-screener = MLScreener(
+estimator = TMEstimator(
     threshold = threshold,
     score_factor = score_factor,
     df_screen = df_screen,
     key_screen = 'key_screen',
     value_screen = 'value_screen',
     key_party = 'key_party',
-    value_party = 'value_party',
-    verbose = False
+    value_party = 'value_party'
 )
 
-screener.fit(df_screen['value_screen'])
+estimator.fit(df_screen['value_screen'])
 f = open('./model/model.joblib', mode = 'wb+')
-dump(screener, f)
+dump(estimator, f)
 f.close()
 
 api.add_resource(
     OnDemand, 
     '/ondemand/',
     resource_class_kwargs = {
-        'screener': screener
+        'estimator': estimator
     }
 )
 api.add_resource(
     Batch, 
     '/batch/',
     resource_class_kwargs = {
-        'screener': screener
+        'estimator': estimator
     }
 )
 

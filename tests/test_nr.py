@@ -15,16 +15,15 @@ class NameRecognitionTest(unittest.TestCase):
             url = 'http://localhost:5000/ondemand/',
             params = {
                 'key_party': "prueba1",
-                'value_party': "miquisha shinsuke blouncie",
-                'birth_date': "1988-03-26",
-                'birth_country': "AG",
-                'identifier': "5100235j"
+                'value_party': "udelka jesan fiffer",
+                'birth_date': "1952-02-17",
+                'birth_country': "FR",
+                'identifier': "1170675h"
             }
         ).json()
-        df_filter = pd.DataFrame(result['df_filter'])
-        print(df_filter)
-        screen = pd.DataFrame(result['screen'])
-        print(screen)
+        #adjacency_matrix = pd.DataFrame(result)
+        adjacency_matrix = pd.read_json(result)
+        print(adjacency_matrix.loc[0])
 
     def test_batch(self):
         import requests
@@ -47,7 +46,7 @@ class NameRecognitionTest(unittest.TestCase):
             url = 'http://localhost:5000/batch/',
             params = {
                 'url': url,
-                'query': "select * from wlf.party limit 9000;",
+                'query': "select * from wlf.party limit 8000;",
             }
         ).json()
         print(h)

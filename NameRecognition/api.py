@@ -3,9 +3,11 @@ import pandas as pd
 import string
 import random
 
+from NameRecognition.ExtraFields import ExtraFields
+
 class OnDemand(Resource):
-    def __init__(self, screener):
-        self.screener = screener
+    def __init__(self, estimator):
+        self.estimator = estimator
         self.parser = reqparse.RequestParser()
         self.parser.add_argument('key_party')
         self.parser.add_argument('value_party')
@@ -24,15 +26,24 @@ class OnDemand(Resource):
             'birth_country': args['birth_country'],
             'identifier': args['identifier'],
         }])
-        df_filter = self.screener.screening(df)
+        adjacency_matrix = self.estimator.predict(df)
+        adjacency_matrix = ExtraFields(
+            df_screen = self.estimator.df_screen,
+            adjacency_matrix = adjacency_matrix,
+            df_party = df,
+            score_factor = self.estimator.score_factor,
+            threshold = self.estimator.threshold,
+            key_party = self.estimator.key_party,
+            key_screen = self.estimator.key_screen
+        )
+        return(adjacency_matrix.to_json())
         return {
-            'df_filter': df_filter.to_dict(orient = 'list'),
-            'screen': self.screener.screen.to_dict(orient = 'list')
+            'adjacency_matrix': adjacency_matrix.to_dict(orient = 'list')
         }
 
 class Batch(Resource):
-    def __init__(self, screener):
-        self.screener = screener
+    def __init__(self, estimator):
+        self.estimator = estimator
         self.parser = reqparse.RequestParser()
         self.parser.add_argument('url')
         self.parser.add_argument('query')
@@ -48,22 +59,14 @@ class Batch(Resource):
             sql = args['query'],
             index_col = None
         )
-        df_filter = self.screener.screening(df)
-        df_filter_name = 'df_filter_' + ''.join(random.choices(string.ascii_lowercase, k=32))
-        df_filter.to_sql(
-            name = df_filter_name,
-            schema = 'wlf',
-            con = conn,
-            index = False
-        )
-        screen_name = 'screen_' + ''.join(random.choices(string.ascii_lowercase, k=32))
-        self.screener.screen.to_sql(
-            name = screen_name,
+        adjacency_matrix = self.estimator.predict(df)
+        adjacency_matrix_name = 'df_filter_' + ''.join(random.choices(string.ascii_lowercase, k=32))
+        adjacency_matrix.to_sql(
+            name = adjacency_matrix_name,
             schema = 'wlf',
             con = conn,
             index = False
         )
         return {
-            'df_filter': df_filter_name,
-            'screen': screen_name
+            'adjacency_matrix': adjacency_matrix_name
         }
