@@ -1,14 +1,12 @@
 import unittest
-
 import sys
 sys.path[0] = sys.path[0].replace('\\tests','')
 
-import pandas as pd
-
 class NameRecognitionTest(unittest.TestCase):
-    def test_ondemand(self):
+    def test_ondemand_docker(self):
         import requests
         import json
+        import pandas as pd
 
         session = requests.Session()
         result = session.get(
@@ -31,6 +29,7 @@ class NameRecognitionTest(unittest.TestCase):
     def test_batch(self):
         import requests
         import json
+        import pandas as pd
         import os
         import platform
         from NameRecognition import environ
