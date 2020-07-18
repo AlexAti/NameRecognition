@@ -29,6 +29,15 @@ services:
       nr_networks:
     ports:
       - "5432:5432" # postgres
+  balancer_nr:
+    image: balancer_nr
+    networks:
+      nr_networks:
+    restart: always
+    depends_on: 
+      - nr_node
+    ports:
+      - "5000:5000"
 
 networks:
   nr_networks:
