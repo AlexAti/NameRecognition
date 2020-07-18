@@ -21,7 +21,7 @@ from NameRecognition.api import (
 app = Flask(__name__)
 api = Api(app)
 
-con = create_engine(
+"""con = create_engine(
     '{dialect}://{user}:{password}@{url}:{port}'.format(
         dialect = os.environ.get('NAME_RECOGNITION_SQL_DIALECT'),
         user = os.environ.get('NAME_RECOGNITION_SQL_USER'),
@@ -29,6 +29,9 @@ con = create_engine(
         url = os.environ.get('NAME_RECOGNITION_SQL_URL'),
         port = os.environ.get('NAME_RECOGNITION_SQL_PORT')
     )
+).connect()"""
+con = create_engine(
+    os.environ.get('NAME_RECOGNITION_SQL_URL')
 ).connect()
 
 df_screen = pd.read_sql_query(

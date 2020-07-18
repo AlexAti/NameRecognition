@@ -15,10 +15,11 @@ class NameRecognitionTest(unittest.TestCase):
             url = 'http://localhost:5000/ondemand/',
             params = {
                 'key_party': "prueba1",
-                'value_party': "udelka jesan fiffer",
-                'birth_date': "1952-02-17",
-                'birth_country': "FR",
-                'identifier': "1170675h"
+                'value_party': "heather carlito pankau",
+                'birth_date': "1937-08-19",
+                'birth_country': "ES",
+                'identifier': "1201740c",
+                "gender": "male"
             }
         ).json()
         #adjacency_matrix = pd.DataFrame(result)
