@@ -14,6 +14,7 @@ class OnDemand(Resource):
         self.parser.add_argument('birth_date')
         self.parser.add_argument('birth_country')
         self.parser.add_argument('identifier')
+        self.parser.add_argument('gender')
 
     def get(self):
         args = self.parser.parse_args()
@@ -25,6 +26,7 @@ class OnDemand(Resource):
             'birth_date': args['birth_date'],
             'birth_country': args['birth_country'],
             'identifier': args['identifier'],
+            'gender': args['gender']
         }])
         adjacency_matrix = self.estimator.predict(df)
         adjacency_matrix = ExtraFields(
@@ -37,9 +39,6 @@ class OnDemand(Resource):
             key_screen = self.estimator.key_screen
         )
         return(adjacency_matrix.to_json())
-        return {
-            'adjacency_matrix': adjacency_matrix.to_dict(orient = 'list')
-        }
 
 class Batch(Resource):
     def __init__(self, estimator):
@@ -60,7 +59,18 @@ class Batch(Resource):
             index_col = None
         )
         adjacency_matrix = self.estimator.predict(df)
-        adjacency_matrix_name = 'df_filter_' + ''.join(random.choices(string.ascii_lowercase, k=32))
+        adjacency_matrix = ExtraFields(
+            df_screen = self.estimator.df_screen,
+            adjacency_matrix = adjacency_matrix,
+            df_party = df,
+            score_factor = self.estimator.score_factor,
+            threshold = self.estimator.threshold,
+            key_party = self.estimator.key_party,
+            key_screen = self.estimator.key_screen
+        )
+        adjacency_matrix_name = 'df_filter_' + ''.join(
+            random.choices(string.ascii_lowercase, k = 32)
+        )
         adjacency_matrix.to_sql(
             name = adjacency_matrix_name,
             schema = 'wlf',
