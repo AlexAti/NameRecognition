@@ -22,9 +22,11 @@ class NameRecognitionTest(unittest.TestCase):
                 "gender": "male"
             }
         ).json()
-        #adjacency_matrix = pd.DataFrame(result)
         adjacency_matrix = pd.read_json(result)
-        print(adjacency_matrix.loc[0])
+        if df.shape[0] != 0:
+            print(adjacency_matrix.loc[0])
+        else:
+            print('Empty result')
 
     def test_batch(self):
         import requests
@@ -34,13 +36,7 @@ class NameRecognitionTest(unittest.TestCase):
         from NameRecognition import environ
 
         session = requests.Session()
-        url = '{dialect}://{user}:{password}@{url}:{port}'.format(
-            dialect = os.environ.get('NAME_RECOGNITION_SQL_DIALECT'),
-            user = os.environ.get('NAME_RECOGNITION_SQL_USER'),
-            password = os.environ.get('NAME_RECOGNITION_SQL_PASSWORD'),
-            url = 'namerecognition_postgres_1',#os.environ.get('NAME_RECOGNITION_SQL_URL'),
-            port = os.environ.get('NAME_RECOGNITION_SQL_PORT')
-        )
+        url = os.environ.get('NAME_RECOGNITION_SQL_URL')
         print(url)
 
         h = session.get(
