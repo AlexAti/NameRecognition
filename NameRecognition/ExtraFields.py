@@ -34,6 +34,10 @@ def ExtraFields(df_screen, adjacency_matrix, df_party, score_factor, threshold, 
         'identifier': 'identifier_party',
         'gender': 'gender_party'
     }, axis = 1)
+    adjacency_matrix['birth_date_screen'] = adjacency_matrix['birth_date_screen'].apply(
+        lambda date: date.strftime("%Y-%m-%d")
+    )
+
     adjacency_matrix['birth_country_hit'] = adjacency_matrix['birth_country_party'] == adjacency_matrix['birth_country_screen']
     adjacency_matrix['birth_date_hit'] = adjacency_matrix['birth_date_party'] == adjacency_matrix['birth_date_screen']
     adjacency_matrix['identifier_hit'] = adjacency_matrix['identifier_party'] == adjacency_matrix['identifier_screen']

@@ -10,6 +10,8 @@ import platform
 if platform.system() != 'Windows': 
     os.chdir(path = '/NameRecognition')
 else:
+    import sys
+    sys.path[0] = sys.path[0].replace('NameRecognition\\NameRecognition','NameRecognition')
     from NameRecognition import environ
 
 from NameRecognition.Estimator import TMEstimator
@@ -47,7 +49,7 @@ threshold = pd.read_sql_query(
 ).loc[0]
 print(threshold)
 
-print('sql: ', df_screen.shape)
+print('sql: ', df_screen.head(5))
 
 estimator = TMEstimator(
     threshold = threshold,

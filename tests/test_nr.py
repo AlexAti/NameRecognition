@@ -13,15 +13,15 @@ class NameRecognitionTest(unittest.TestCase):
             url = 'http://localhost:5000/ondemand/',
             params = {
                 'key_party': "prueba1",
-                'value_party': "heather carlito pankau",
-                'birth_date': "1937-08-19",
-                'birth_country': "ES",
-                'identifier': "1201740c",
-                "gender": "male"
+                'value_party': "musial tona kuplerski",
+                'birth_date': "1902-01-20",
+                'birth_country': "AG",
+                'identifier': "3724412b",
+                "gender": "female"
             }
         ).json()
         adjacency_matrix = pd.read_json(result)
-        if df.shape[0] != 0:
+        if adjacency_matrix.shape[0] != 0:
             print(adjacency_matrix.loc[0])
         else:
             print('Empty result')
