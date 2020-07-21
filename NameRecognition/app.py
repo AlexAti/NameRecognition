@@ -14,7 +14,10 @@ else:
     sys.path[0] = sys.path[0].replace('NameRecognition\\NameRecognition','NameRecognition')
     from NameRecognition import environ
 
-from NameRecognition.Estimator import TMEstimator
+from NameRecognition.Estimator import (
+    TMEstimator,
+    BatchEstimator
+)
 from NameRecognition.api import (
     OnDemand,
     Batch
@@ -33,8 +36,6 @@ df_screen = pd.read_sql_query(
     index_col = None
 )
 
-print(df_screen.head(5))
-
 score_factor = pd.read_sql_query(
     sql = "SELECT * FROM WLF.SCORE_FACTOR WHERE factor_key = '" + os.environ['NAME_RECOGNITION_SCORE_FACTOR'] + "'",
     con = con,
@@ -51,20 +52,20 @@ print(threshold)
 
 print('sql: ', df_screen.head(5))
 
-estimator = TMEstimator(
-    threshold = threshold,
-    score_factor = score_factor,
+estimator = BatchEstimator(
+    estimator = TMEstimator(
+        threshold = threshold,
+        score_factor = score_factor,
+        df_screen = None,
+        key_screen = 'key_screen',
+        value_screen = 'value_screen',
+        key_party = 'key_party',
+        value_party = 'value_party'
+    ),
     df_screen = df_screen,
-    key_screen = 'key_screen',
-    value_screen = 'value_screen',
-    key_party = 'key_party',
-    value_party = 'value_party'
+    screen_batch_size = int(os.environ['NAME_RECOGNITION_SCREEN_BATCH_SIZE'])
 )
-
 estimator.fit(df_screen['value_screen'])
-f = open('./model/model.joblib', mode = 'wb+')
-dump(estimator, f)
-f.close()
 
 api.add_resource(
     OnDemand, 

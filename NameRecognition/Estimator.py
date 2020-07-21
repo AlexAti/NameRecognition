@@ -1,8 +1,11 @@
 from NameRecognition.CSChar import CSChar
 from NameRecognition.Transformer import *
+from NameRecognition.Pipeline import Pipeline
+from NameRecognition.ExtraFields import ExtraFields
+
+import numpy as np
 import pandas as pd
 
-from NameRecognition.Pipeline import Pipeline
 
 class BaseEstimator:
     '''
@@ -72,7 +75,8 @@ class TMEstimator(BaseEstimator):
     def fit(self, series):
         series = self.pipeline.fit_transform(series)
         self.nr.fit(series)
-        self.df_screen['transform'] = self.pipeline.transform(self.df_screen[self.value_screen])
+        if self.df_screen != None:
+            self.df_screen['transform'] = self.pipeline.transform(self.df_screen[self.value_screen])
 
     def predict(self, df):
         df['transform'] = self.pipeline.transform(df[self.value_party])
@@ -85,6 +89,10 @@ class TMEstimator(BaseEstimator):
             value2 = 'transform'
         )
         return(adjacency_matrix)
+
+    def set_df_screen(self, df_screen):
+        self.df_screen = df_screen
+        self.df_screen['transform'] = self.pipeline.transform(self.df_screen[self.value_screen])
 
 class NNEstimator(BaseEstimator):
     '''
@@ -114,3 +122,60 @@ class DLEstimator(BaseEstimator):
     def fit(self, parameter_list):
         raise NotImplementedError
 
+class BatchEstimator:
+    def __init__(self,
+        estimator = None,
+        df_screen = None,
+        screen_batch_size = 25000
+    ):
+        indices_or_sections = [x for x in list(range(
+            screen_batch_size,
+            df_screen.shape[0],
+            screen_batch_size
+        ))]
+
+        self.list_df_screen = np.split(
+            df_screen,
+            indices_or_sections = indices_or_sections,
+            axis = 0
+        )
+        self.estimator = estimator
+        for i in range(len(self.list_df_screen)):
+            print(self.list_df_screen[i].shape)
+            print(self.list_df_screen[i].columns)
+
+    def predict(self, df):
+        self.estimator.set_df_screen(self.list_df_screen[0])
+        adjacency_matrix = self.estimator.predict(df.copy())
+        adjacency_matrix = ExtraFields(
+            df_screen = self.list_df_screen[0],
+            adjacency_matrix = adjacency_matrix,
+            df_party = df.copy(),
+            score_factor = self.estimator.score_factor,
+            threshold = self.estimator.threshold,
+            key_party = self.estimator.key_party,
+            key_screen = self.estimator.key_screen
+        )
+        print('first: ', adjacency_matrix.shape)
+        for i in range(1,len(self.list_df_screen)):
+            self.estimator.set_df_screen(self.list_df_screen[i])
+            adjacency_matrix_ = self.estimator.predict(df)
+            adjacency_matrix_ = ExtraFields(
+                df_screen = self.list_df_screen[i],
+                adjacency_matrix = adjacency_matrix_,
+                df_party = df.copy(),
+                score_factor = self.estimator.score_factor,
+                threshold = self.estimator.threshold,
+                key_party = self.estimator.key_party,
+                key_screen = self.estimator.key_screen
+            )
+            print('second: ', adjacency_matrix.shape)
+            adjacency_matrix = adjacency_matrix.append(
+                adjacency_matrix_,
+                ignore_index = True
+            )
+            print('third: ', adjacency_matrix.shape)
+        return (adjacency_matrix)
+
+    def fit(self, series):
+        self.estimator.fit(series)

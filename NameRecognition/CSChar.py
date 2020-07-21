@@ -57,8 +57,8 @@ class CSChar:
             list(zip(*result.nonzero(), result.data)),
             columns = [key1, key2, 'score']
         )
-        df[key1] = df1.loc[df[key1],key1].reset_index(drop = True)
-        df[key2] = df2.loc[df[key2],key2].reset_index(drop = True)
+        df[key1] = df1.reset_index(drop = True).loc[df[key1],key1].reset_index(drop = True)
+        df[key2] = df2.reset_index(drop = True).loc[df[key2],key2].reset_index(drop = True)
         return df
 
 if __name__ == "__main__":

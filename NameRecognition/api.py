@@ -29,15 +29,6 @@ class OnDemand(Resource):
             'gender': args['gender']
         }])
         adjacency_matrix = self.estimator.predict(df)
-        adjacency_matrix = ExtraFields(
-            df_screen = self.estimator.df_screen,
-            adjacency_matrix = adjacency_matrix,
-            df_party = df,
-            score_factor = self.estimator.score_factor,
-            threshold = self.estimator.threshold,
-            key_party = self.estimator.key_party,
-            key_screen = self.estimator.key_screen
-        )
         return(adjacency_matrix.to_json())
 
 class Batch(Resource):
@@ -59,15 +50,6 @@ class Batch(Resource):
             index_col = None
         )
         adjacency_matrix = self.estimator.predict(df)
-        adjacency_matrix = ExtraFields(
-            df_screen = self.estimator.df_screen,
-            adjacency_matrix = adjacency_matrix,
-            df_party = df,
-            score_factor = self.estimator.score_factor,
-            threshold = self.estimator.threshold,
-            key_party = self.estimator.key_party,
-            key_screen = self.estimator.key_screen
-        )
         adjacency_matrix_name = 'df_filter_' + ''.join(
             random.choices(string.ascii_lowercase, k = 32)
         )
