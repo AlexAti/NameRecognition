@@ -37,10 +37,10 @@ class NameRecognitionTest(unittest.TestCase):
 
         session = requests.Session()
         url = os.environ.get('NAME_RECOGNITION_SQL_URL')
-        """url = url.replace(
+        url = url.replace(
             'localhost',
             'namerecognition_postgres_1'
-        )"""
+        )
         print(url)
 
         h = session.get(
