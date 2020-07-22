@@ -16,7 +16,7 @@ La extracción de patrones se realiza en 3 pasos:
 4) Comparación de campos segundarios.
 
 ## Servicio y despliegue
-Presenta un despliegue en forma de servicio API RESTFUL implementado sobre la biblioteca [flask](https://flask.palletsprojects.com/en/1.1.x/) que implementa principalmente dos funcionalidades:
+Presenta un despliegue en forma de servicio API RESTful implementado sobre la biblioteca [flask](https://flask.palletsprojects.com/en/1.1.x/) que implementa principalmente dos funcionalidades:
 
 **Cotejo individual**
 
@@ -35,7 +35,8 @@ h = session.get(
         'value_party': "minger felita girijarani",
         'birth_date': "1999-03-26",
         'birth_country': "ID",
-        'identifier': "8346836g"
+        'identifier': "8346836g",
+        'gender': "female"
     }
 ).json()
 ```
