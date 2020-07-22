@@ -17,6 +17,7 @@ def ExtraFields(df_screen, adjacency_matrix, df_party, score_factor, threshold, 
         'score',
         'global_score',
         'birth_country_hit',
+        'year_hit',
         'birth_date_hit',
         'identifier_hit',
         'gender_hit',
@@ -52,11 +53,13 @@ def ExtraFields(df_screen, adjacency_matrix, df_party, score_factor, threshold, 
 
     adjacency_matrix['birth_country_hit'] = adjacency_matrix['birth_country_party'] == adjacency_matrix['birth_country_screen']
     adjacency_matrix['birth_date_hit'] = adjacency_matrix['birth_date_party'] == adjacency_matrix['birth_date_screen']
+    adjacency_matrix['year_hit'] = adjacency_matrix['birth_date_party'].apply(lambda d: d[0:4]) == adjacency_matrix['birth_date_screen'].apply(lambda d: d[0:4])
     adjacency_matrix['identifier_hit'] = adjacency_matrix['identifier_party'] == adjacency_matrix['identifier_screen']
     adjacency_matrix['gender_hit'] = adjacency_matrix['gender_party'] == adjacency_matrix['gender_screen']
 
     adjacency_matrix['global_score'] = adjacency_matrix['birth_country_hit'] * score_factor['birth_country_factor']
-    adjacency_matrix['global_score'] += adjacency_matrix['birth_date_hit'] * score_factor['birth_date_factor'] 
+    adjacency_matrix['global_score'] += adjacency_matrix['birth_date_hit'] * score_factor['birth_date_factor']
+    adjacency_matrix['global_score'] += adjacency_matrix['year_hit'] * 5
     adjacency_matrix['global_score'] += adjacency_matrix['identifier_hit'] * score_factor['identifier_factor'] 
     adjacency_matrix['global_score'] += adjacency_matrix['score'] * 100 * score_factor['value_factor']
     

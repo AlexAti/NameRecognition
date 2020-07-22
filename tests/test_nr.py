@@ -20,6 +20,7 @@ class NameRecognitionTest(unittest.TestCase):
                 "gender": "female"
             }
         ).json()
+        session.close()
         adjacency_matrix = pd.read_json(result)
         print(adjacency_matrix.shape)
         if adjacency_matrix.shape[0] != 0:
@@ -50,6 +51,7 @@ class NameRecognitionTest(unittest.TestCase):
                 'query': "select * from wlf.party order by key_party desc limit 10000 ;",
             }
         ).json()
+        session.close()
         print(h)
 
     def test_batch(self):
