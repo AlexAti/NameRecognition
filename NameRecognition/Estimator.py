@@ -126,12 +126,17 @@ class BatchEstimator:
     def __init__(self,
         estimator = None,
         df_screen = None,
-        screen_batch_size = 25000
+        screen_batch_size = 25000,
+        party_batch_size = 25000,
     ):
+        self.estimator = estimator
+        self.screen_batch_size = screen_batch_size
+        self.party_batch_size = party_batch_size
+
         indices_or_sections = [x for x in list(range(
-            screen_batch_size,
+            self.screen_batch_size,
             df_screen.shape[0],
-            screen_batch_size
+            self.screen_batch_size
         ))]
 
         self.list_df_screen = np.split(
@@ -139,12 +144,31 @@ class BatchEstimator:
             indices_or_sections = indices_or_sections,
             axis = 0
         )
-        self.estimator = estimator
-        for i in range(len(self.list_df_screen)):
-            print(self.list_df_screen[i].shape)
-            print(self.list_df_screen[i].columns)
+        
 
     def predict(self, df):
+        indices_or_sections = [x for x in list(range(
+            self.party_batch_size,
+            df.shape[0],
+            self.party_batch_size
+        ))]
+
+        list_df_party = np.split(
+            df,
+            indices_or_sections = indices_or_sections,
+            axis = 0
+        )
+
+        adjacency_matrix = self.predict_single(list_df_party[0])
+        for i in range(1,len(list_df_party)):
+            adjacency_matrix_ = self.predict_single(list_df_party[i])
+            adjacency_matrix = adjacency_matrix.append(
+                adjacency_matrix_,
+                ignore_index = True
+            )
+        return(adjacency_matrix)
+
+    def predict_single(self, df):
         self.estimator.set_df_screen(self.list_df_screen[0])
         adjacency_matrix = self.estimator.predict(df.copy())
         adjacency_matrix = ExtraFields(
@@ -156,7 +180,6 @@ class BatchEstimator:
             key_party = self.estimator.key_party,
             key_screen = self.estimator.key_screen
         )
-        print('first: ', adjacency_matrix.shape)
         for i in range(1,len(self.list_df_screen)):
             self.estimator.set_df_screen(self.list_df_screen[i])
             adjacency_matrix_ = self.estimator.predict(df)
@@ -169,13 +192,11 @@ class BatchEstimator:
                 key_party = self.estimator.key_party,
                 key_screen = self.estimator.key_screen
             )
-            print('second: ', adjacency_matrix.shape)
             adjacency_matrix = adjacency_matrix.append(
                 adjacency_matrix_,
                 ignore_index = True
             )
-            print('third: ', adjacency_matrix.shape)
-        return (adjacency_matrix)
-
+        return(adjacency_matrix)
+    
     def fit(self, series):
         self.estimator.fit(series)

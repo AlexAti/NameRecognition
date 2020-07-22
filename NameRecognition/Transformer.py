@@ -28,7 +28,7 @@ class SNTransformer(BaseTransformer):
     '''
     def __init__(self):
         # Funcion optimizada de estandarizacion
-        self.estandar_name = lambda s: re.sub(r'[^\w\s]','',re.sub('\s+', ' ', str(s).lower()).strip())
+        self.estandar_name = lambda s: re.sub(r'[^<\w\s]','',re.sub('\s+', ' ', str(s).lower()).strip())
 
     def transform(self, series):
         return(series.swifter.apply(self.estandar_name))
@@ -66,7 +66,7 @@ class SWCTransformer(BaseTransformer):
             stop_words = exceptions
         )
         # Funcion de motor de filtro optimizado
-        self.engine_filter = lambda name, stop_word: ((' ' + name + ' ').replace(' ' + stop_word + ' ',' ')[1:-1]) if (float(len((' ' + name + ' ').replace(' ' + stop_word + ' ',' ')[1:-1])) / float(len(name)) >= self.threshold) else name
+        self.engine_filter = lambda name, stop_word: (' ' + name + ' ').replace(' ' + stop_word + ' ',' ')[1:-1]
         self.word_list = []
 
     def word_filter(self, series):

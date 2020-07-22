@@ -37,17 +37,17 @@ class NameRecognitionTest(unittest.TestCase):
 
         session = requests.Session()
         url = os.environ.get('NAME_RECOGNITION_SQL_URL')
-        url = url.replace(
+        """url = url.replace(
             'localhost',
             'namerecognition_postgres_1'
-        )
+        )"""
         print(url)
 
         h = session.get(
             url = 'http://localhost:5000/batch/',
             params = {
                 'url': url,
-                'query': "select * from wlf.party order by key_party desc limit 2000 ;",
+                'query': "select * from wlf.party order by key_party desc limit 10000 ;",
             }
         ).json()
         print(h)
@@ -111,6 +111,10 @@ class NameRecognitionTest(unittest.TestCase):
             index_col = None
         )
         adjacency_matrix = estimator.predict(df)
+
+    def test_distance_cosine(self):
+        from scipy.spatial import distance
+        print(distance.cosine([1, 0, 0], [0, 1, 0]))
 
 if __name__ == "__main__":
     unittest.main(verbosity = 2)

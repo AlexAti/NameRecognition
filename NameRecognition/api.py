@@ -18,8 +18,6 @@ class OnDemand(Resource):
 
     def get(self):
         args = self.parser.parse_args()
-        print(args['key_party'])
-        print(args['value_party'])
         df = pd.DataFrame([{
             'key_party': args['key_party'],
             'value_party': args['value_party'],
@@ -40,8 +38,6 @@ class Batch(Resource):
     
     def get(self):
         args = self.parser.parse_args()
-        print(args['url'])
-        print(args['query'])
         from sqlalchemy import create_engine
         conn = create_engine(args['url']).connect()
         df = pd.read_sql_query(
