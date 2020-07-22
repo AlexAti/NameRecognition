@@ -62,7 +62,7 @@ h = session.get(
     }
 ).json()
 ```
-La salida indica la conexción y las tablas de base de datos donde se ha volcado el cotejo.
+La salida indica la conexión y las tablas de base de datos donde se ha volcado el cotejo.
 
 ## Docker
 El proyecto se puede construir y arrancar facilmente usando la imagen Docker descrita en el fichero DockerFile:
@@ -71,30 +71,24 @@ FROM python:latest as nr_node
 RUN apt-get update && apt-get install -y \
     git \
     uwsgi \
-    uwsgi-src
-RUN git clone https://`cat /github`@github.com/rojo1997/NameRecognition
-RUN python3 -m pip install -r /NameRecognition/requirements.txt
-RUN export PYTHON=python3.8
-RUN uwsgi --build-plugin "/usr/src/uwsgi/plugins/python python38"
-RUN mv python38_plugin.so /usr/lib/uwsgi/plugins/python38_plugin.so
-RUN chmod 644 /usr/lib/uwsgi/plugins/python38_plugin.so
+    uwsgi-src && \
+    apt-get clean
+ADD github /
+RUN git clone https://`cat /github`@github.com/rojo1997/NameRecognition && \
+    rm github && \
+    python3 -m pip install -r /NameRecognition/requirements.txt && \
+    export PYTHON=python3.8 && \
+    uwsgi --build-plugin "/usr/src/uwsgi/plugins/python python38" && \
+    mv python38_plugin.so /usr/lib/uwsgi/plugins/python38_plugin.so && \
+    chmod 644 /usr/lib/uwsgi/plugins/python38_plugin.so
 WORKDIR /NameRecognition/NameRecognition/
 EXPOSE 5000
 CMD [ "uwsgi", "--ini", "server.ini"]
 ```
-Puesto que el proyecto implementa una conexión estándar a base de datos relacional desde la que se puede cargar tanto la lista de cotejo como la lista contra lo que cotejar, nativamente permite una escalabilidad haciendo uso de docker-compose. Un ejemplo de orquestación simple sería el siguiente:
-```yml
-version: "3.8"
-services:
-  nr_node:
-    build: 
-      context: .
-      target: nr_node
-```
 
 ## Docker-Compose
 
-Que se podría arrancar 5 instancias del contenedor de la siguiente forma:
+Ejemplo parametrizado del contenedo:
 ```yml
 version: "3.8"
 services:
@@ -137,6 +131,11 @@ volumes:
   data_postgres:
 ```
 
+Escalabilidad del servicio
+```bash
+docker-compose -f "docker-compose.yml" up -d --scale nr_node=5
+```
+
 ## Dependencias
 NameRecognition requiere de:
 * flask
@@ -146,7 +145,7 @@ NameRecognition requiere de:
 * sklearn
 * requests
 
-El servidor rest se levanta sobre un servidor de aplicaciones [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/) que configura principalmente el número de procesos para concurrencia del servicio.
+El servidor RESTful se levanta sobre un servidor de aplicaciones [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/) que configura el número de procesos para concurrencia del servicio y le da la posibilidad de ser balanceado.
 
 ## Testing Module
 
@@ -155,15 +154,12 @@ un entorno de variables de sistema equivalente al desplegado por la imagen Docke
 
 ```python
 import os
-
-os.environ['NAME_RECOGNITION_SQL_DIALECT'] = 'postgresql'
-os.environ['NAME_RECOGNITION_SQL_USER'] = 'postgres'
-os.environ['NAME_RECOGNITION_SQL_PASSWORD'] = 'password'
-os.environ['NAME_RECOGNITION_SQL_URL'] = 'localhost'
-os.environ['NAME_RECOGNITION_SQL_PORT'] = '5432'
+os.environ['NAME_RECOGNITION_SQL_URL'] = 'postgresql://postgres:password@localhost:5432'
 os.environ['NAME_RECOGNITION_PORT'] = '5000'
 os.environ['NAME_RECOGNITION_DEBUG'] = 'true'
-os.environ['NAME_RECOGNITION_QUERY_SCREEN'] = 'SELECT * FROM WLF.screening limit 1000;'
+os.environ['NAME_RECOGNITION_QUERY_SCREEN'] = 'SELECT * FROM WLF.screening LIMIT 100000;'
 os.environ['NAME_RECOGNITION_SCORE_FACTOR'] = 'key_0'
 os.environ['NAME_RECOGNITION_THRESHOLD'] = 'key_0'
+os.environ['NAME_RECOGNITION_SCREEN_BATCH_SIZE'] = '10000'
+os.environ['NAME_RECOGNITION_PARTY_BATCH_SIZE'] = '25000'
 ```
