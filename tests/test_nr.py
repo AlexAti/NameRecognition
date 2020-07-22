@@ -13,7 +13,7 @@ class NameRecognitionTest(unittest.TestCase):
             url = 'http://localhost:5000/ondemand/',
             params = {
                 'key_party': "prueba1",
-                'value_party': "musial tona kuplerski",
+                'value_party': "msial tona kuplerski",
                 'birth_date': "1902-01-20",
                 'birth_country': "AG",
                 'identifier': "3724412b",
@@ -37,17 +37,17 @@ class NameRecognitionTest(unittest.TestCase):
 
         session = requests.Session()
         url = os.environ.get('NAME_RECOGNITION_SQL_URL')
-        """url = url.replace(
+        url = url.replace(
             'localhost',
             'namerecognition_postgres_1'
-        )"""
+        )
         print(url)
 
         h = session.get(
             url = 'http://localhost:5000/batch/',
             params = {
                 'url': url,
-                'query': "select * from wlf.party order by key_party desc limit 5000 ;",
+                'query': "select * from wlf.party order by key_party desc limit 2000 ;",
             }
         ).json()
         print(h)

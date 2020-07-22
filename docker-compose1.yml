@@ -1,0 +1,67 @@
+version: "3.8"
+services:
+  nr_node_rca:
+    image: namerecognition
+    networks:
+      nr_networks:
+    restart: always
+    depends_on:
+      - postgres
+    environment: 
+      - NAME_RECOGNITION_SQL_URL=postgresql://postgres:password@namerecognition_postgres_1:5432
+      - NAME_RECOGNITION_PORT=5000
+      - NAME_RECOGNITION_DEBUG=true
+      - NAME_RECOGNITION_QUERY_SCREEN=SELECT * FROM WLF.screening WHERE category = 'RCA';
+      - NAME_RECOGNITION_SCORE_FACTOR=key_0
+      - NAME_RECOGNITION_THRESHOLD=key_0
+      - NAME_RECOGNITION_SCREEN_BATCH_SIZE=25000
+      - NAME_RECOGNITION_PARTY_BATCH_SIZE=25000
+  nr_node_pep:
+    image: namerecognition
+    networks:
+      nr_networks:
+    restart: always
+    depends_on:
+      - postgres
+    environment: 
+      - NAME_RECOGNITION_SQL_URL=postgresql://postgres:password@namerecognition_postgres_1:5432
+      - NAME_RECOGNITION_PORT=5000
+      - NAME_RECOGNITION_DEBUG=true
+      - NAME_RECOGNITION_QUERY_SCREEN=SELECT * FROM WLF.screening WHERE category = 'PEP';
+      - NAME_RECOGNITION_SCORE_FACTOR=key_0
+      - NAME_RECOGNITION_THRESHOLD=key_0
+      - NAME_RECOGNITION_SCREEN_BATCH_SIZE=25000
+      - NAME_RECOGNITION_PARTY_BATCH_SIZE=25000
+  nr_node_sip:
+    image: namerecognition
+    networks:
+      nr_networks:
+    restart: always
+    depends_on:
+      - postgres
+    environment: 
+      - NAME_RECOGNITION_SQL_URL=postgresql://postgres:password@namerecognition_postgres_1:5432
+      - NAME_RECOGNITION_PORT=5000
+      - NAME_RECOGNITION_DEBUG=true
+      - NAME_RECOGNITION_QUERY_SCREEN=SELECT * FROM WLF.screening WHERE category = 'SIP';
+      - NAME_RECOGNITION_SCORE_FACTOR=key_0
+      - NAME_RECOGNITION_THRESHOLD=key_0
+      - NAME_RECOGNITION_SCREEN_BATCH_SIZE=25000
+      - NAME_RECOGNITION_PARTY_BATCH_SIZE=25000
+  postgres:
+    image: datamodel
+    volumes: 
+      - data_postgres:/var/lib/postgresql/data
+    restart: always
+    environment: 
+      - POSTGRES_PASSWORD=password
+    networks:
+      nr_networks:
+    ports:
+      - "5432:5432" # postgres
+
+networks:
+  nr_networks:
+    driver: bridge
+volumes: 
+  data_postgres:
